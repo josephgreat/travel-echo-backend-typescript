@@ -7,7 +7,7 @@ import { MAX_UNIQUE_IMAGE_NAME_GENERATION_ATTEMPTS } from "#src/utils/constants"
 import { z } from "zod";
 
 const Schema = z.object({
-  name: z.string().min(1).max(255).trim(),
+  name: z.string().min(1).max(255).trim()
 });
 
 /**
@@ -69,24 +69,26 @@ export default api(
     }
 
     // Generate unique name if needed
-    let newName = name
-    let counter = 0
-    const MAX_ATTEMPTS = MAX_UNIQUE_IMAGE_NAME_GENERATION_ATTEMPTS
+    let newName = name;
+    let counter = 0;
+    const MAX_ATTEMPTS = MAX_UNIQUE_IMAGE_NAME_GENERATION_ATTEMPTS;
 
     while (counter < MAX_ATTEMPTS) {
       const exists = await memoryImageRepository.findOne(
         { name: newName, memory: image.memory },
         { filters: { isNot: { _id: image._id } } }
-      )
+      );
 
-      if (!exists) break
+      if (!exists) break;
 
-      counter++
-      newName = `${name}(${counter})`
+      counter++;
+      newName = `${name}(${counter})`;
     }
 
     if (counter > MAX_ATTEMPTS) {
-      throw HttpException.badRequest("Could not find a unique name variant after multiple attempts");
+      throw HttpException.badRequest(
+        "Could not find a unique name variant after multiple attempts"
+      );
     }
 
     const updatedImage = await memoryImageRepository.updateOne(
@@ -97,8 +99,8 @@ export default api(
 
     return {
       success: true,
-      message: 'Image name updated successfully',
+      message: "Image name updated successfully",
       image: updatedImage
-    }
+    };
   })
-)
+);

@@ -18,12 +18,10 @@ export default function auth(role: UserRole) {
         return;
       }
       if (user.role !== role) {
-        res
-          .status(403)
-          .json({
-            success: false,
-            message: "Forbidded. You are not allowed to access this resource"
-          });
+        res.status(403).json({
+          success: false,
+          message: "Forbidded. You are not allowed to access this resource"
+        });
       }
       req.user = user;
       next();

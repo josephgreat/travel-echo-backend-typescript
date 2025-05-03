@@ -31,7 +31,12 @@ passport.use(
         //@ts-expect-error (subscription is populated)
         subscription: user.subscription,
         //@ts-expect-error (subscription is populated)
-        isSubscriptionValid: user.subscription?.isActive && user.subscription?.startDate && user.subscription?.expireDate && new Date(user.subscription.startDate) <= new Date() && new Date(user.subscription.expireDate) > new Date()
+        isSubscriptionValid:
+          user.subscription?.isActive &&
+          user.subscription?.startDate &&
+          user.subscription?.expireDate &&
+          new Date(user.subscription.startDate) <= new Date() &&
+          new Date(user.subscription.expireDate) > new Date()
       };
       return done(null, authUser);
     } catch (error) {

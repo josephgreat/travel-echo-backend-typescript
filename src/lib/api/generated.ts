@@ -4,108 +4,108 @@ export type RouteGroups = "/auth" | "/google" | "/users/me";
 //Number of routes = 21
 export const routes = [
   {
-    "group": "/auth",
-    "path": "/auth/recovery/send-otp",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/recovery/send-otp",
+    method: "post"
   },
   {
-    "group": "/auth",
-    "path": "/auth/recovery/verify-otp",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/recovery/verify-otp",
+    method: "post"
   },
   {
-    "group": "/auth",
-    "path": "/auth/recovery/reset-password",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/recovery/reset-password",
+    method: "post"
   },
   {
-    "group": "/auth",
-    "path": "/auth/verification/send-otp",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/verification/send-otp",
+    method: "post"
   },
   {
-    "group": "/auth",
-    "path": "/auth/verification/verify",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/verification/verify",
+    method: "post"
   },
   {
-    "group": "/auth",
-    "path": "/auth/login",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/login",
+    method: "post"
   },
   {
-    "group": "/auth",
-    "path": "/auth/register",
-    "method": "post"
+    group: "/auth",
+    path: "/auth/register",
+    method: "post"
   },
   {
-    "group": "/google",
-    "path": "/google",
-    "method": "get"
+    group: "/google",
+    path: "/google",
+    method: "get"
   },
   {
-    "group": "/google",
-    "path": "/google/callback",
-    "method": "get"
+    group: "/google",
+    path: "/google/callback",
+    method: "get"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images",
-    "method": "post"
+    group: "/users/me",
+    path: "/users/me/memories/:memory_id/images",
+    method: "post"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories",
-    "method": "post"
+    group: "/users/me",
+    path: "/users/me/memories",
+    method: "post"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images/delete",
-    "method": "patch"
+    group: "/users/me",
+    path: "/users/me/memories/:memory_id/images/delete",
+    method: "patch"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id",
-    "method": "delete"
+    group: "/users/me",
+    path: "/users/me/memories/:memory_id",
+    method: "delete"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories",
-    "method": "get"
+    group: "/users/me",
+    path: "/users/me/memories",
+    method: "get"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images",
-    "method": "get"
+    group: "/users/me",
+    path: "/users/me/memories/:memory_id/images",
+    method: "get"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images/:image_id",
-    "method": "put"
+    group: "/users/me",
+    path: "/users/me/memories/:memory_id/images/:image_id",
+    method: "put"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id",
-    "method": "put"
+    group: "/users/me",
+    path: "/users/me/memories/:memory_id",
+    method: "put"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/profile",
-    "method": "get"
+    group: "/users/me",
+    path: "/users/me/profile",
+    method: "get"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/profile/image",
-    "method": "delete"
+    group: "/users/me",
+    path: "/users/me/profile/image",
+    method: "delete"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/profile/image",
-    "method": "put"
+    group: "/users/me",
+    path: "/users/me/profile/image",
+    method: "put"
   },
   {
-    "group": "/users/me",
-    "path": "/users/me/profile",
-    "method": "put"
+    group: "/users/me",
+    path: "/users/me/profile",
+    method: "put"
   }
 ] as const;

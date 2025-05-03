@@ -9,7 +9,7 @@ export interface AuthUser {
   verified: boolean;
   role: UserRole;
   plan: UserPlan;
-  subscription?: Subscription
-  isSubscriptionValid?: boolean
+  subscription?: Subscription;
+  isSubscriptionValid?: boolean;
   token?: string;
 }

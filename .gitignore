@@ -43,3 +43,5 @@ coverage/
 
 # Git specific
 .git/
+
+public/file.html

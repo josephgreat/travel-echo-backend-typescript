@@ -413,7 +413,7 @@ function escapeHtml(str) {
     .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
     .replace(/\_\_([^*]+)\_\_/g, "<i>$1</i>")
     .replace(/\`\`\`([^*]+)\`\`\`/g, "<code>$1</code>")
-    .replace(/\\n/g, "<br />")
+    .replace(/\\n/g, "<br />");
   //.replace(/"/g, '&quot;')
   //.replace(/'/g, '&#039;');
 }
@@ -836,7 +836,9 @@ function generateHTML(grouped) {
                     api.body?.value || api.bodyDesc
                       ? `<section data-content="body" class="body-content">
                         ${api.bodyDesc ? `<div class="body-desc">${api.bodyDesc}</div>` : ""}
-                        ${api.body?.value ? `<div class="code-block">
+                        ${
+                          api.body?.value
+                            ? `<div class="code-block">
                           <div>
                             <code style="color: var(--slate-300); font-size: 0.8rem; font-weight: 600">${api.body.type}</code>
                             <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
@@ -844,16 +846,20 @@ function generateHTML(grouped) {
                           <code>
                             <pre>${api.body.value}</pre>
                           </code>
-                        </div>` : ""}
+                        </div>`
+                            : ""
+                        }
                       </section>`
                       : ""
-                    }
+                  }
 
                   ${
                     api.response?.value || api.resDesc
                       ? `<section data-content="response" class="response-content">
                         ${api.resDesc ? `<div class="res-desc">${api.resDesc}</div>` : ""}
-                        ${api.response?.value ? `<div class="code-block">
+                        ${
+                          api.response?.value
+                            ? `<div class="code-block">
                         <div>
                           <code style="color: var(--slate-300); font-size: 0.8rem; font-weight: 600">${api.response.type}</code>
                           <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
@@ -861,9 +867,11 @@ function generateHTML(grouped) {
                         <code>
                           <pre>${api.response.value}</pre>
                         </code>
-                      </div>` : ""}
+                      </div>`
+                            : ""
+                        }
                     </section>`
-                    : ""
+                      : ""
                   }
                 </div>
               </div>

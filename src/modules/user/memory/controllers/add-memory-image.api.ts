@@ -35,7 +35,11 @@ import cloudinary from "cloudinary";
  * }
  */
 
-interface ImageInfo { name: string, success: boolean, error?: string }
+interface ImageInfo {
+  name: string;
+  success: boolean;
+  error?: string;
+}
 
 export default api(
   {
@@ -47,7 +51,7 @@ export default api(
     const { id } = req.user!;
     const memory_id = req.params.memory_id.toString();
 
-    const memory = await memoryRepository.findOne({ _id: memory_id, user: id })
+    const memory = await memoryRepository.findOne({ _id: memory_id, user: id });
     if (!memory) {
       throw HttpException.notFound("Memory not found");
     }
@@ -56,7 +60,7 @@ export default api(
       const images: ImageInfo[] = [];
 
       const uploadPromises: Promise<MemoryImage>[] = [];
-  
+
       const bb = busboy({
         headers: req.headers,
         limits: {
@@ -64,10 +68,10 @@ export default api(
           fileSize: MAX_MEMORY_IMAGE_SIZE
         }
       });
-  
+
       bb.on("file", (fileName, file) => {
         const imagePublicId = `IMG_MEM_${memory_id.toString()}_${randomString(16, "numeric")}`;
-  
+
         const uploadPromise = new Promise<MemoryImage>((uploadResolve, uploadReject) => {
           const stream = cloudinary.v2.uploader.upload_stream(
             {
@@ -81,7 +85,7 @@ export default api(
                 images.push({ name: imagePublicId, success: false, error: error.message });
                 return uploadReject(error);
               }
-  
+
               if (result) {
                 const image: MemoryImage = {
                   url: result.secure_url,
@@ -96,40 +100,44 @@ export default api(
                 images.push({ name: imagePublicId, success: true });
                 uploadResolve(image);
               } else {
-                images.push({ name: imagePublicId, success: false, error: "No result from Cloudinary" });
+                images.push({
+                  name: imagePublicId,
+                  success: false,
+                  error: "No result from Cloudinary"
+                });
                 uploadReject(new Error("No result from Cloudinary"));
               }
             }
           );
-  
+
           file.pipe(stream);
-  
+
           file.on("error", (err) => {
             images.push({ name: imagePublicId, success: false, error: err.message });
             uploadReject(err);
           });
         });
-  
+
         uploadPromises.push(uploadPromise);
       });
-  
+
       bb.on("error", (err) => {
         reject(HttpException.badRequest("Failed to upload file: " + (err as Error).message));
       });
-  
+
       bb.on("finish", async () => {
         if (uploadPromises.length === 0) {
           reject(HttpException.badRequest("No files uploaded"));
           return;
         }
-  
+
         try {
           const uploadedImages = await Promise.all(uploadPromises);
 
           const failedImages: ImageInfo[] = [];
           const successfulImages: ImageInfo[] = [];
 
-          images.forEach(image => {
+          images.forEach((image) => {
             if (image.success) {
               successfulImages.push(image);
             } else {
@@ -144,7 +152,7 @@ export default api(
             { imageCount: uploadedImages.length },
             { returning: true }
           );
-  
+
           resolve({
             success: true,
             totalFilesReceived: images.length,
@@ -156,8 +164,8 @@ export default api(
           reject(HttpException.badRequest("Upload failed: " + (err as Error).message));
         }
       });
-  
+
       req.pipe(bb);
     });
   })
-)
+);

@@ -36,7 +36,11 @@ function setDeep(obj: Record<string, any>, path: string[], value: any): void {
   let current = obj;
   for (let i = 0; i < path.length - 1; i++) {
     const part = path[i];
-    if (typeof current[part] !== 'object' || current[part] === null || current[part] === undefined) {
+    if (
+      typeof current[part] !== "object" ||
+      current[part] === null ||
+      current[part] === undefined
+    ) {
       current[part] = {};
     }
     current = current[part];
@@ -46,11 +50,17 @@ function setDeep(obj: Record<string, any>, path: string[], value: any): void {
   }
 }
 
-export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
 
 // Type to define the structure created by picking a *single* path (similar to your original PathsToProps, slightly adjusted)
-export type PickSinglePath<T extends object, Path extends string> =
-  Path extends `${infer Key}.${infer Rest}`
+export type PickSinglePath<
+  T extends object,
+  Path extends string
+> = Path extends `${infer Key}.${infer Rest}`
   ? // Yes, it has a dot.
     Key extends keyof T // Check if the first part (Key) is a valid key in T
     ? T[Key] extends object // Check if the value at Key is (or could be) an object
@@ -74,8 +84,9 @@ export type PickSinglePath<T extends object, Path extends string> =
     : // No, Path is not a valid key. This path is invalid.
       never;
 
-export type PathsToProps<T extends object, P extends string> =
-UnionToIntersection<PickSinglePath<T, P>>;
+export type PathsToProps<T extends object, P extends string> = UnionToIntersection<
+  PickSinglePath<T, P>
+>;
 
 /**
  * Creates an object composed of the picked object properties or nested properties. *
@@ -105,15 +116,15 @@ export function pick<
       const part = pathParts[i];
 
       const isLastPart = i === pathParts.length - 1;
-      const canDescend = current !== null && current !== undefined && typeof current === 'object' && part in current;
+      const canDescend =
+        current !== null && current !== undefined && typeof current === "object" && part in current;
       const existsFinalPart = current !== null && current !== undefined && part in current;
 
-
       if (isLastPart ? existsFinalPart : canDescend) {
-         current = current[part];
+        current = current[part];
       } else {
-         exists = false;
-         break;
+        exists = false;
+        break;
       }
     }
 
@@ -123,7 +134,6 @@ export function pick<
   }
   return result as PathsToProps<T, P>;
 }
-
 
 /**
  *

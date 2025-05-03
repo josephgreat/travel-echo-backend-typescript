@@ -3,8 +3,8 @@ import { Repository } from "./repository";
 
 export class SubscriptionRepository extends Repository<Subscription> {
   constructor() {
-    super(SubscriptionModel)
+    super(SubscriptionModel);
   }
 }
 
-export const subscriptionRepository = new SubscriptionRepository()
+export const subscriptionRepository = new SubscriptionRepository();

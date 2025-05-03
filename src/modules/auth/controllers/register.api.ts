@@ -1,0 +1,69 @@
+import { api } from "#src/lib/api/api";
+import { defineHandler, defineValidator } from "#src/lib/api/handlers";
+import { HttpException } from "#src/lib/api/http";
+import { z } from "zod";
+import { MAXIMUM_PASSWORD_LENGTH, MINIMUM_PASSWORD_LENGTH } from "#src/utils/constants";
+import { userRepository } from "#src/db/repositories/user.repository";
+import { omit } from "#src/utils/helpers";
+import { UserRole } from "#src/db/models/user.model";
+
+const Schema = z
+  .object({
+    name: z.string({ message: "Name is required" }),
+    email: z.string({ message: "Email is required" }).email({ message: "Invalid email" }),
+    password: z
+      .string({ message: "Password is required" })
+      .min(MINIMUM_PASSWORD_LENGTH, {
+        message: `Password must be at least ${MINIMUM_PASSWORD_LENGTH} characters long`
+      })
+      .max(MAXIMUM_PASSWORD_LENGTH, {
+        message: `Password must be at most ${MAXIMUM_PASSWORD_LENGTH} characters long`
+      })
+      .refine((p) => /[a-z]/.test(p), {
+        message: "Password must contain at least one lowercase letter"
+      })
+      .refine((p) => /[A-Z]/.test(p), {
+        message: "Password must contain at least one uppercase letter"
+      })
+      .refine((p) => /\d/.test(p), {
+        message: "Password must contain at least one number"
+      }),
+    confirmPassword: z.string({ message: "Confirm Password is required" })
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"]
+  });
+
+/**
+ *
+ * @api {post} /auth/register
+ * @domain Authentication
+ * @desc Register
+ * @header {Content-Type} application/json
+ * @body {json} { "name": "string", "email": "string", "password": "string", "confirmPassword": "string" }
+ * @res {json}  { "success": true, "message": "string", "user": {...} }
+ */
+export default api(
+  {
+    group: "/auth",
+    path: "/register",
+    method: "post",
+    middleware: defineValidator("body", Schema)
+  },
+  defineHandler(async (req) => {
+    const { name, email, password } = req.validatedBody as z.infer<typeof Schema>;
+    const existingUser = await userRepository.findOne({ email });
+    if (existingUser) {
+      throw HttpException.badRequest("Email already in use. Try logging in instead.");
+    }
+    const user = await userRepository.create({ name, email, password, role: UserRole.User });
+    return {
+      success: true,
+      message: "User registered successfully.",
+      user: {
+        ...omit(user, ["password", "passwordHistory"])
+      }
+    };
+  })
+);

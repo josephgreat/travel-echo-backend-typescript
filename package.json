@@ -1,0 +1,63 @@
+{
+  "name": "travel-echo",
+  "version": "1.0.0",
+  "description": "Travel Echo",
+  "main": "./dist/server.js",
+  "scripts": {
+    "rm:dist": "node ./bin/clear-dist",
+    "create:docs": "node ./bin/create-doc.js",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node ./bin/clear-dist && tsc && node ./dist/server.js",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "imports": {
+    "#src/*": "./dist/*.js"
+  },
+  "author": "Travel Echo",
+  "license": "ISC",
+  "dependencies": {
+    "@typegoose/typegoose": "^12.14.0",
+    "bcrypt": "^5.1.1",
+    "busboy": "^1.6.0",
+    "cloudinary": "^2.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "fast-glob": "^3.3.3",
+    "formidable": "^3.5.4",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.0",
+    "nodemailer": "^6.10.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@types/bcrypt": "^5.0.2",
+    "@types/busboy": "^1.5.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/formidable": "^3.4.5",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.15.2",
+    "@types/nodemailer": "^6.4.17",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
+    "@types/passport-jwt": "^4.0.1",
+    "eslint": "^9.25.1",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.0"
+  }
+}

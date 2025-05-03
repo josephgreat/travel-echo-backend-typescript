@@ -61,6 +61,7 @@ export default api(
     if (images.length === 0) {
       //Delete all images
       const { count } = await deleteMemoryImages(id, memory, "all");
+      await cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`)
       return {
         success: true,
         message: "All images deleted successfully",

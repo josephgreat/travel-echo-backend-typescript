@@ -11,5 +11,6 @@ export interface AuthUser {
   plan: UserPlan;
   subscription?: Subscription;
   isSubscriptionValid?: boolean;
+  profile: mongoose.Types.ObjectId;
   token?: string;
 }

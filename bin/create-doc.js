@@ -411,8 +411,8 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
-    .replace(/\_\_([^*]+)\_\_/g, "<i>$1</i>")
-    .replace(/\`\`\`([^*]+)\`\`\`/g, "<code>$1</code>")
+    .replace(/\_\_([^_]+)\_\_/g, "<i>$1</i>")
+    .replace(/```([^`]+)```/g, "<code>$1</code>")
     .replace(/\\n/g, "<br />");
   //.replace(/"/g, '&quot;')
   //.replace(/'/g, '&#039;');
@@ -514,6 +514,15 @@ function generateHTML(grouped) {
       --breakpoint-xl: 1280px;
       --breakpoint-2xl: 1536px;
     }
+
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/Inter.ttf') format('truetype');
+      //font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -524,6 +533,7 @@ function generateHTML(grouped) {
       color: var(--slate-700);
       background-color: var(--slate-50);
     }
+
     main {
       padding: 1rem 1rem 5rem 1rem;
     }
@@ -534,6 +544,7 @@ function generateHTML(grouped) {
       border-radius: 4px;
       padding: 0.5rem 1rem;
       overflow-x: auto;
+      font-family: monospace;
 
       code {
         display: block;

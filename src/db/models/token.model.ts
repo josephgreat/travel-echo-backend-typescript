@@ -1,5 +1,6 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 import mongoose from "mongoose";
+import { User } from "./user.model";
 
 export enum TokenType {
   EmailVerification = "EMAIL_VERIFICATION",
@@ -10,7 +11,7 @@ export enum TokenType {
   schemaOptions: { timestamps: true }
 })
 export class Token {
-  @prop()
+  @prop({ ref: () => User })
   public user!: mongoose.Types.ObjectId;
 
   @prop({ required: true })

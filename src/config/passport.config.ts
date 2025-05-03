@@ -6,9 +6,6 @@ import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { JWT_LOGIN_SESSION_DURATION } from "#src/utils/constants";
 import { AuthUser } from "#src/types/user";
-import { User } from "#src/db/models/user.model";
-import mongoose from "mongoose";
-import { Subscription } from "#src/db/models/subscription.model";
 
 const JWT_SECRET = env.get("JWT_SECRET", "jwt-secret");
 const jwtOptions = {
@@ -24,25 +21,20 @@ export interface JWTPayload {
 passport.use(
   new JWTStrategy(jwtOptions, async (payload: JWTPayload, done) => {
     try {
-      const user = (await userRepository.findById(payload.userId, {
-        populate: "subscription"
-      })) as unknown as Omit<User, "subscription"> & {
-        _id: mongoose.Types.ObjectId;
-        subscription: Subscription;
-      };
+      const user = await userRepository.findById(payload.userId);
       if (!user) {
         return done(null, false, { message: "User not found" });
       }
       const authUser: AuthUser = {
         id: user._id,
-        ...pick(user, ["name", "email", "verified", "role", "plan"]),
-        subscription: user.subscription,
-        isSubscriptionValid:
-          user.subscription?.isActive &&
-          user.subscription?.startDate &&
-          user.subscription?.expireDate &&
-          new Date(user.subscription.startDate) <= new Date() &&
-          new Date(user.subscription.expireDate) > new Date()
+        ...pick(user, [
+          "name",
+          "email",
+          "verified",
+          "role",
+          "plan",
+          "profile",
+        ]),
       };
       return done(null, authUser);
     } catch (error) {
@@ -80,6 +72,7 @@ passport.use(
           verified: user.verified,
           role: user.role,
           plan: user.plan,
+          profile: user.profile,
           token
         });
       } catch (error) {

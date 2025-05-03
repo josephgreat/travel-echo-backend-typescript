@@ -6,6 +6,7 @@ import { MAXIMUM_PASSWORD_LENGTH, MINIMUM_PASSWORD_LENGTH } from "#src/utils/con
 import { userRepository } from "#src/db/repositories/user.repository";
 import { omit } from "#src/utils/helpers";
 import { UserRole } from "#src/db/models/user.model";
+import { profileRepository } from "#src/db/repositories/profile.repository";
 
 const Schema = z
   .object({
@@ -58,11 +59,18 @@ export default api(
       throw HttpException.badRequest("Email already in use. Try logging in instead.");
     }
     const user = await userRepository.create({ name, email, password, role: UserRole.User });
+    const profile = await profileRepository.create({ user: user._id });
+    await userRepository.updateOne(user._id, { profile: profile._id });
+
     return {
       success: true,
       message: "User registered successfully.",
       user: {
-        ...omit(user, ["password", "passwordHistory"])
+        ...omit(user, ["password", "passwordHistory"]),
+        profile: {
+          _id: profile._id,
+          user: profile.user._id
+        }
       }
     };
   })

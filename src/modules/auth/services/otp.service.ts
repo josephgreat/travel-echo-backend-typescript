@@ -20,7 +20,7 @@ export const getOtp = async (userId: mongoose.Types.ObjectId | string, type: Tok
   const id = castToObjectId(userId);
   await tokenRepository.deleteMany({ user: id, type });
   const value = randomString(6, "numeric");
-  console.log(value);
+  //console.log(value);
   const hashedValue = await hash(value, 10);
   await tokenRepository.create({
     user: id,

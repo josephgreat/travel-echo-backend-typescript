@@ -61,6 +61,8 @@ export default api(
     if (images.length === 0) {
       //Delete all images
       const { count } = await deleteMemoryImages(id, memory, "all");
+      const newImageCount = Math.max((memory.imageCount || 0) - count, 0);
+      await memoryRepository.updateOne(memory._id, { imageCount: newImageCount });
       await cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`)
       return {
         success: true,
@@ -85,6 +87,9 @@ export default api(
       { user: id, memory: memory._id },
       { in: { _id: imageIds } }
     );
+
+    const newImageCount = Math.max((memory.imageCount || 0) - result.deletedCount, 0);
+    await memoryRepository.updateOne(memory._id, { imageCount: newImageCount });
 
     return {
       success: true,

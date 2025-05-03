@@ -10,7 +10,7 @@ export enum SubscriptionType {
   schemaOptions: { timestamps: true }
 })
 export class Subscription {
-  @prop({ required: true })
+  @prop({ required: true, ref: "User" })
   public user!: mongoose.Types.ObjectId;
 
   @prop()

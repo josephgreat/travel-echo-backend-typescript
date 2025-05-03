@@ -1,6 +1,8 @@
 import { getModelForClass, modelOptions, pre, prop } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import { hash } from "bcrypt";
+import { Profile } from "./profile.model";
+import { Subscription } from "./subscription.model";
 
 export enum UserPlan {
   Free = "FREE",
@@ -51,10 +53,10 @@ export class User {
   @prop({ required: true, enum: UserPlan, default: UserPlan.Free })
   public plan!: UserPlan;
 
-  @prop()
+  @prop({ ref: () => Profile })
   public profile!: mongoose.Types.ObjectId;
 
-  @prop()
+  @prop({ ref: () => Subscription })
   public subscription?: mongoose.Types.ObjectId;
 
   @prop()

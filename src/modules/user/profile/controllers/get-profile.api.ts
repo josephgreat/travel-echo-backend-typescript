@@ -14,7 +14,7 @@ export const getProfile = api(
   defineHandler(async (req) => {
     const id = req.user?.id;
 
-    const profile = await profileRepository.findOrCreate({ user: id }, { user: id });
+    const profile = await profileRepository.findOne({ user: id });
 
     return { profile };
   })

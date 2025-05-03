@@ -1,6 +1,7 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import { BillingCycle } from "./plan.model";
+import { User } from "./user.model";
 
 export enum PaymentStatus {
   Success = "SUCCESS",
@@ -18,7 +19,7 @@ export enum PaymentChannel {
   schemaOptions: { timestamps: true }
 })
 export class Payment {
-  @prop()
+  @prop({ ref: () => User })
   public user!: mongoose.Types.ObjectId;
 
   @prop({ required: true })

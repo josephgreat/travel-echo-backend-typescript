@@ -3,7 +3,7 @@ import { subscriptionRepository } from "#src/db/repositories/subscription-reposi
 import { userRepository } from "#src/db/repositories/user.repository";
 import { Request, Response, NextFunction } from "express";
 
-export default function premiumOnly() {
+export default function premiumOnly(allowNonPremium: boolean = false) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user;
@@ -13,33 +13,43 @@ export default function premiumOnly() {
           message: "Not authorized. Please, sign in."
         });
       }
-      const { subscription } = user;
-      if (!subscription) {
+
+      const subscription = await subscriptionRepository.findOne({ user: user.id })
+
+      if (!allowNonPremium && !subscription) {
         return res.status(403).json({
           success: false,
           message: "You must have an active premium subscription to continue."
         });
       }
+
       const now = new Date();
       const isSubscriptionValid =
-        subscription.isActive &&
-        subscription.startDate &&
-        subscription.expireDate &&
+        subscription?.isActive &&
+        subscription?.startDate &&
+        subscription?.expireDate &&
         new Date(subscription.startDate) <= now &&
         new Date(subscription.expireDate) > now;
 
+      user.subscription = subscription || undefined;
+      user.isSubscriptionValid = isSubscriptionValid
+
       if (!isSubscriptionValid) {
         if (user.plan === UserPlan.Premium) {
-          await userRepository.updateOne(user.id, { plan: UserPlan.Free });
-          await subscriptionRepository.updateOne({ user: user.id }, { isActive: false });
+          await Promise.all([
+            userRepository.updateOne(user.id, { plan: UserPlan.Free }),
+            subscriptionRepository.updateOne({ user: user.id }, { isActive: false })
+          ])
 
           user.plan = UserPlan.Free;
-          user.subscription!.isActive = false;
+          if (user.subscription) user.subscription.isActive = false;
         }
-        return res.status(403).json({
-          success: false,
-          message: "You must have an active premium subscription to continue."
-        });
+        if (!allowNonPremium) {
+          return res.status(403).json({
+            success: false,
+            message: "You must have an active premium subscription to continue."
+          });
+        }
       }
       next();
     } catch (error) {

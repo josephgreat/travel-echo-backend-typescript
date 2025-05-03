@@ -3,6 +3,7 @@ import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import deleteMemoryImages from "../services/delete-memory-images";
+import cloudinary from 'cloudinary';
 
 /**
  * @api {delete} /users/me/memories/:memory_id
@@ -30,8 +31,12 @@ export default api(
     }
 
     const { count } = await deleteMemoryImages(id, memory, "all");
-    await memoryRepository.deleteOne(memory._id);
 
+    await Promise.all([
+      await memoryRepository.deleteOne(memory._id),
+      await cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`)
+    ])
+    
     return {
       success: true,
       message: "Memory and associated images deleted successfully",

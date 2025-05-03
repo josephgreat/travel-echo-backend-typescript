@@ -13,6 +13,7 @@ export type Fields<T> = T & { _id: string | mongoose.Types.ObjectId };
 
 export interface RepositoryQueryOptions<T> {
   select?: string | string[];
+  include?: string | string[];
   exclude?: string | string[];
   populate?: string | string[] | { path: string; select?: string | string[] }[];
   limit?: number;
@@ -236,7 +237,7 @@ export class Repository<T> {
   ): Q {
     if (!options) return query;
 
-    const { select, exclude, populate, limit, skip, sort, filters } = options;
+    const { select, include, exclude, populate, limit, skip, sort, filters } = options;
 
     // Handle select/exclude
     if (select && exclude) {
@@ -253,12 +254,20 @@ export class Repository<T> {
       query.select(excludeStr);
     }
 
+    if (include) {
+      const includeArray = Array.isArray(include) ? include : [include];
+      const includeStr = includeArray
+      .map((field) => `+${field}`)
+      .join(" ");
+      query.select(includeStr);
+    }
+
     // Handle populate
     if (populate) {
       const pops = Array.isArray(populate) ? populate : [populate];
       for (const pop of pops) {
         if (typeof pop === "string") {
-          query.populate({ path: pop });
+          query.populate(pop);
         } else if (typeof pop === "object" && "path" in pop) {
           query.populate({
             path: pop.path,

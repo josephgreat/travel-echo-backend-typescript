@@ -47,10 +47,5 @@ export default async function deleteMemoryImages(
 
     processedCount += batch.length;
   }
-
-  const newImageCount = imageCount - amountToDelete;
-
-  await memoryRepository.updateOne(memory._id, { imageCount: newImageCount });
-
   return { count: processedCount };
 }

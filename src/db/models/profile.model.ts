@@ -50,7 +50,7 @@ export class School {
   schemaOptions: { timestamps: true }
 })
 export class Profile {
-  @prop({ required: true })
+  @prop({ required: true, ref: "User" })
   public user!: mongoose.Types.ObjectId;
 
   @prop()

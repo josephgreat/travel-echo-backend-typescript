@@ -1,6 +1,6 @@
 import { getModelForClass, modelOptions, pre, prop } from "@typegoose/typegoose";
 import { computeAge } from "#src/utils/helpers";
-import { MINIMUM_USER_AGE } from "#src/utils/constants";
+import { MIN_USER_AGE } from "#src/utils/constants";
 import mongoose from "mongoose";
 
 export enum Gender {
@@ -40,8 +40,8 @@ export class School {
 @pre<Profile>("save", async function (next) {
   if (this.dateOfBirth && this.isModified("dateOfBirth")) {
     const age = computeAge(this.dateOfBirth);
-    if (age < MINIMUM_USER_AGE) {
-      return next(new Error(`You must be at least ${MINIMUM_USER_AGE} years old.`));
+    if (age < MIN_USER_AGE) {
+      return next(new Error(`You must be at least ${MIN_USER_AGE} years old.`));
     }
   }
   next();

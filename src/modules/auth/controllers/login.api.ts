@@ -6,8 +6,8 @@ import { HttpException } from "#src/lib/api/http";
 import {
   errorCodes,
   JWT_LOGIN_SESSION_DURATION,
-  MAXIMUM_PASSWORD_LENGTH,
-  MINIMUM_PASSWORD_LENGTH
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH
 } from "#src/utils/constants";
 import { omit, signJWT } from "#src/utils/helpers";
 import { compare } from "bcrypt";
@@ -18,11 +18,11 @@ const Schema = z.object(
     email: z.string({ message: "Email is required" }).email({ message: "Invalid email" }),
     password: z
       .string({ message: "Password is required" })
-      .min(MINIMUM_PASSWORD_LENGTH, {
-        message: `Password must be at least ${MINIMUM_PASSWORD_LENGTH} characters long`
+      .min(MIN_PASSWORD_LENGTH, {
+        message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`
       })
-      .max(MAXIMUM_PASSWORD_LENGTH, {
-        message: `Password must be at most ${MAXIMUM_PASSWORD_LENGTH} characters long`
+      .max(MAX_PASSWORD_LENGTH, {
+        message: `Password must be at most ${MAX_PASSWORD_LENGTH} characters long`
       })
   },
   { message: "Request body is invalid" }
@@ -91,7 +91,7 @@ export default api(
 
     const user = await userRepository.findOne(
       { email },
-      { 
+      {
         include: ["password", "passwordHistory"],
         populate: ["profile", "subscription"]
       }

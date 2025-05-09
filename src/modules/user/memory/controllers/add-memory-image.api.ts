@@ -148,7 +148,7 @@ export default api(
           await memoryImageRepository.insertMany(uploadedImages);
 
           const newImageCount = (memory.imageCount || 0) + uploadedImages.length;
-          
+
           await memoryRepository.updateOne(
             memory._id,
             { imageCount: newImageCount },

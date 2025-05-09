@@ -54,15 +54,13 @@ export const updateProfile = api(
   },
   defineHandler(async (req) => {
     const id = req.user?.id;
-    const profileId = req.user?.profile
+    const profileId = req.user?.profile;
 
     const data = req.validatedBody as z.infer<typeof Schema>;
 
-    const profile = await profileRepository.updateOne(
-      { _id: profileId, user: id },
-      data,
-      { returning: true }
-    );
+    const profile = await profileRepository.updateOne({ _id: profileId, user: id }, data, {
+      returning: true
+    });
 
     return { profile };
   })

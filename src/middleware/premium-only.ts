@@ -14,7 +14,7 @@ export default function premiumOnly(allowNonPremium: boolean = false) {
         });
       }
 
-      const subscription = await subscriptionRepository.findOne({ user: user.id })
+      const subscription = await subscriptionRepository.findOne({ user: user.id });
 
       if (!allowNonPremium && !subscription) {
         return res.status(403).json({
@@ -32,14 +32,14 @@ export default function premiumOnly(allowNonPremium: boolean = false) {
         new Date(subscription.expireDate) > now;
 
       user.subscription = subscription || undefined;
-      user.isSubscriptionValid = isSubscriptionValid
+      user.isSubscriptionValid = isSubscriptionValid;
 
       if (!isSubscriptionValid) {
         if (user.plan === UserPlan.Premium) {
           await Promise.all([
             userRepository.updateOne(user.id, { plan: UserPlan.Free }),
             subscriptionRepository.updateOne({ user: user.id }, { isActive: false })
-          ])
+          ]);
 
           user.plan = UserPlan.Free;
           if (user.subscription) user.subscription.isActive = false;

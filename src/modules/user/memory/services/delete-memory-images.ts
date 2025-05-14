@@ -18,7 +18,8 @@ export default async function deleteMemoryImages(
 
   const amountToDelete = count === "all" ? imageCount : count;
   if (amountToDelete < 1) {
-    throw new Error("No image deleted");
+    //throw new Error("No image deleted");
+    return { count: 0 };
   }
 
   let processedCount = 0;

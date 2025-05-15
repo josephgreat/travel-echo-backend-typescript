@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { hash } from "bcrypt";
 import { Profile } from "./profile.model";
 import { Subscription } from "./subscription.model";
+import { DriverProfile } from "./driver-profile.model";
 
 export enum UserPlan {
   Free = "FREE",
@@ -41,11 +42,17 @@ export class User {
   @prop({ select: false })
   public password!: string;
 
-  @prop({ select: false, type: () => [PasswordHistory], default: [] })
-  public passwordHistory!: PasswordHistory[];
-
   @prop({ required: true, default: false })
   public verified!: boolean;
+
+  @prop()
+  public phoneNumber?: string;
+
+  @prop()
+  public address?: string;
+
+  @prop({ select: false, type: () => [PasswordHistory], default: [] })
+  public passwordHistory!: PasswordHistory[];
 
   @prop({ required: true, enum: UserRole, default: UserRole.User })
   public role!: UserRole;
@@ -58,6 +65,12 @@ export class User {
 
   @prop({ ref: () => Subscription })
   public subscription?: mongoose.Types.ObjectId;
+
+  @prop({ default: false })
+  public isDriver!: boolean;
+
+  @prop({ ref: () => DriverProfile })
+  public driverProfile?: mongoose.Types.ObjectId;
 
   @prop()
   public googleId?: string;

@@ -27,14 +27,7 @@ passport.use(
       }
       const authUser: AuthUser = {
         id: user._id,
-        ...pick(user, [
-          "name",
-          "email",
-          "verified",
-          "role",
-          "plan",
-          "profile",
-        ]),
+        ...pick(user, ["name", "email", "verified", "role", "plan", "profile"])
       };
       return done(null, authUser);
     } catch (error) {

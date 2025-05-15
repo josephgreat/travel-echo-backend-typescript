@@ -256,9 +256,7 @@ export class Repository<T> {
 
     if (include) {
       const includeArray = Array.isArray(include) ? include : [include];
-      const includeStr = includeArray
-      .map((field) => `+${field}`)
-      .join(" ");
+      const includeStr = includeArray.map((field) => `+${field}`).join(" ");
       query.select(includeStr);
     }
 

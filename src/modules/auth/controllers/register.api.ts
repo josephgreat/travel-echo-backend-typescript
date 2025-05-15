@@ -2,7 +2,7 @@ import { api } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
-import { MAXIMUM_PASSWORD_LENGTH, MINIMUM_PASSWORD_LENGTH } from "#src/utils/constants";
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "#src/utils/constants";
 import { userRepository } from "#src/db/repositories/user.repository";
 import { omit } from "#src/utils/helpers";
 import { UserRole } from "#src/db/models/user.model";
@@ -14,11 +14,11 @@ const Schema = z
     email: z.string({ message: "Email is required" }).email({ message: "Invalid email" }),
     password: z
       .string({ message: "Password is required" })
-      .min(MINIMUM_PASSWORD_LENGTH, {
-        message: `Password must be at least ${MINIMUM_PASSWORD_LENGTH} characters long`
+      .min(MIN_PASSWORD_LENGTH, {
+        message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`
       })
-      .max(MAXIMUM_PASSWORD_LENGTH, {
-        message: `Password must be at most ${MAXIMUM_PASSWORD_LENGTH} characters long`
+      .max(MAX_PASSWORD_LENGTH, {
+        message: `Password must be at most ${MAX_PASSWORD_LENGTH} characters long`
       })
       .refine((p) => /[a-z]/.test(p), {
         message: "Password must contain at least one lowercase letter"

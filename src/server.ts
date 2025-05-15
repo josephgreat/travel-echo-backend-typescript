@@ -14,6 +14,11 @@ server.listen(PORT, () => {
   );
 });
 
+server.on("error", (error) => {
+  logger.error("Server error", error);
+  process.exit(1);
+});
+
 process.on("SIGINT", () => {
   server.close(() => {
     logger.info("Server closed.");

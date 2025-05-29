@@ -50,6 +50,11 @@ export const routes = [
   },
   {
     "group": "/users/me",
+    "path": "/users/me/driver-profile/{:user_id}",
+    "method": "post"
+  },
+  {
+    "group": "/users/me",
     "path": "/users/me/memories/:memory_id/images",
     "method": "post"
   },
@@ -87,11 +92,6 @@ export const routes = [
     "group": "/users/me",
     "path": "/users/me/memories/:memory_id",
     "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/driver-profile/{:user_id}",
-    "method": "post"
   },
   {
     "group": "/users/me",

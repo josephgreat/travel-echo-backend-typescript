@@ -40,7 +40,7 @@ export const sendEmailVerificationOtp = api(
     }
     const token = await getOtp(user._id, TokenType.EmailVerification);
 
-    sendMail({
+    await sendMail({
       to: `${user.name}<${user.email}>`,
       subject: "Account Verification",
       text: `Your OTP is ${token}.\nNote: OTP expires in ${OTP_EXPIRY_TIME}`

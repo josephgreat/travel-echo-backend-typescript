@@ -1985,7 +1985,7 @@
                             <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                           </div>
                           <code>
-                            <pre>{ "budget": "string" "trip": "string | optiional", "title": "string", "category": "string", "plannedAmount": "number | optional", "actualAmount": "number", "notes": "string | optional", }</pre>
+                            <pre>{ "budget": "string" "trip": "string | optiional", "title": "string", "category": "string", "plannedAmount": "number | optional", "actualAmount": "number", "notes": "string | optional" }</pre>
                           </code>
                         </div>
                       </section>
@@ -2124,7 +2124,7 @@
             <header class="api-header put">
               <p class="method">PUT</p>
               <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/expenses/{expense_id}</p>
-              <p style="font-size: 0.9rem; color: var(--slate-600)">Creates a new expense</p>
+              <p style="font-size: 0.9rem; color: var(--slate-600)">Updates the expense with the provided expense id</p>
 
               <div class="icons">
               <div class="protected" style="color: var(--slate-400)">
@@ -2212,7 +2212,7 @@
                             <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                           </div>
                           <code>
-                            <pre>{ "budget": "string" "trip": "string | optiional", "title": "string", "category": "string", "plannedAmount": "number | optional", "actualAmount": "number", "notes": "string | optional", }</pre>
+                            <pre>{ "budget": "string" "trip": "string | optiional", "title": "string", "category": "string", "plannedAmount": "number | optional", "actualAmount": "number", "notes": "string | optional" }</pre>
                           </code>
                         </div>
                       </section>
@@ -2225,7 +2225,22 @@
                           <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                         </div>
                         <code>
-                          <pre>{ "success": true, "budget": { "_id": "string", "user": "string", "budget": "string" "trip": "string | optiional", "title": "string", "category": "string", "plannedAmount": "number | optional", "actualAmount": "number", "notes": "string | optional", "createdAt": "Date", "updatedAt": "Date" } }</pre>
+                          <pre>{
+  "success": true,
+  "budget": {
+    "_id": "string",
+    "user": "string",
+    "budget": "string",
+    "trip": "string | optiional",
+    "title": "string",
+    "category": "string",
+    "plannedAmount": "number | optional",
+    "actualAmount": "number",
+    "notes": "string | optional",
+    "createdAt": "Date",
+    "updatedAt": "Date"
+  }
+}</pre>
                         </code>
                       </div>
                     </section>

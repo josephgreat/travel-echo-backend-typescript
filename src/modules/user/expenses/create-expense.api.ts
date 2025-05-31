@@ -52,7 +52,7 @@ const Schema = z.object({
  *  "category": "string",
  *  "plannedAmount": "number | optional",
  *  "actualAmount": "number",
- *  "notes": "string | optional",
+ *  "notes": "string | optional"
  * }
  * @res {json}
  * {

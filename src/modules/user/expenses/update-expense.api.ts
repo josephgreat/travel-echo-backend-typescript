@@ -27,7 +27,7 @@ const Schema = z.object({
 
 /**
  * @api {put} /users/me/expenses/:expense_id
- * @desc Creates a new expense
+ * @desc Updates the expense with the provided expense id
  * @domain {User: Expenses}
  * @use {ContentAuth}
  * @body {json}
@@ -38,7 +38,7 @@ const Schema = z.object({
  *  "category": "string",
  *  "plannedAmount": "number | optional",
  *  "actualAmount": "number",
- *  "notes": "string | optional",
+ *  "notes": "string | optional"
  * }
  * @res {json}
  * {
@@ -46,7 +46,7 @@ const Schema = z.object({
  *   "budget": {
  *     "_id": "string",
  *     "user": "string",
- *     "budget": "string"
+ *     "budget": "string",
  *     "trip": "string | optiional",
  *     "title": "string",
  *     "category": "string",

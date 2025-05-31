@@ -9,7 +9,7 @@ export class Trip {
   @prop({ required: true, ref: () => User })
   public user!: mongoose.Types.ObjectId;
 
-  @prop({ required: true, unique: true })
+  @prop({ required: true })
   public name!: string;
 
   @prop()

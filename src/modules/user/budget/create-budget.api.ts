@@ -26,7 +26,7 @@ const Schema = z.object({
   notes: z
     .string({ message: "Invalid notes" })
     .optional()
-})
+}, { message: "No request body provided"})
 
 
 /**

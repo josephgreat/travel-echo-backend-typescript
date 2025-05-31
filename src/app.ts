@@ -3,7 +3,7 @@ import errorHandler from "#src/middleware/error-handler";
 import corsConfig from "#src/config/cors.config";
 import initializeCloudinary from "#src/config/cloudinary.config";
 import path from "node:path";
-import { generateRoutes } from "./lib/api/router";
+import { generateRoutes } from "./lib/api/route-gen";
 import { initializeDatabase } from "./db/db";
 import parseRequestQuery from "./middleware/parse-request-query";
 import { routeConfig } from "./config/routes.config";
@@ -19,11 +19,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve("public")));
 app.use((req, res, next) => {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV !== "production") {
     console.log(`${req.method} ${req.url}`);
   }
   next();
 });
+/**
+ * API Documentation
+ */
 app.get("/doc", (req, res) => {
   const filePath = path.resolve("public/api.html");
   res.sendFile(filePath);

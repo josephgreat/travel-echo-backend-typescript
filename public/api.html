@@ -987,13 +987,268 @@
           </div>
         </div>
       </section> <section class="domain">
+        <h2>User: Budgets</h2>
+
+        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem">
+          <div class="api">
+            <header class="api-header get">
+              <p class="method">GET</p>
+              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/budgets</p>
+              <p style="font-size: 0.9rem; color: var(--slate-600)">Gets all the budgets of the user</p>
+
+              <div class="icons">
+              <div class="protected" style="color: var(--slate-400)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22px" height="22px" viewBox="0 -960 960 960" fill="currentColor"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
+                </div>
+
+                <div class="chevron" style="color: var(--slate-700)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                </div>
+              </div>
+            </header>
+
+            <div class="content">
+              <div class="content-wrapper" style="padding-top: 1.2rem;">
+                <header class="content-header" style="display: flex; align-items: center; gap: 0.8rem;">
+                  <div>
+                    <input type="radio" name="content-User: Budgets-0" id="params-User: Budgets-0" value="params" checked="true" />
+                    <label for="params-User: Budgets-0" style="font-size: 0.785rem; font-weight: 600">Params</label>
+                  </div>
+                  
+                  <div>
+                    <input type="radio" name="content-User: Budgets-0" id="headers-User: Budgets-0" value="headers" />
+                    <label for="headers-User: Budgets-0" style="font-size: 0.785rem; font-weight: 600">Headers</label>
+                  </div>
+    
+                  <div>
+                    <input type="radio" name="content-User: Budgets-0" id="body-User: Budgets-0" value="body" />
+                    <label for="body-User: Budgets-0" style="font-size: 0.785rem; font-weight: 600">Body</label>
+                  </div>
+    
+                  <div>
+                    <input type="radio" name="content-User: Budgets-0" id="response-User: Budgets-0" value="response" />
+                    <label for="response-User: Budgets-0" style="font-size: 0.785rem; font-weight: 600">Response</label>
+                  </div>
+                </header>
+    
+                <div class="content-section" style="margin-top: 0.75rem; font-size: 0.88rem; font-weight: 500;">
+                  <section data-content="params" class="params-content">
+                    <div style="overflow-x: auto; font-family: monospace; border-radius: 5px;">
+                      <table class="simple-table">
+                        <thead>
+                          <tr style="text-align: left;">
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          
+                          <tr>
+                            <td>
+                              <b>sort</b>
+                            </td>
+                            <td style="color: var(--slate-500)">query</td>
+                            <td style="font-style: italic;">false</td>
+                            <td>e.g. sort=name,desc</td>
+                          </tr>
+                          
+                          <tr>
+                            <td>
+                              <b>select</b>
+                            </td>
+                            <td style="color: var(--slate-500)">query</td>
+                            <td style="font-style: italic;">false</td>
+                            <td>e.g. select=name,email</td>
+                          </tr>
+                          
+                          <tr>
+                            <td>
+                              <b>populate</b>
+                            </td>
+                            <td style="color: var(--slate-500)">query</td>
+                            <td style="font-style: italic;">false</td>
+                            <td>e.g. populate=profile</td>
+                          </tr>
+                          
+                          <tr>
+                            <td>
+                              <b>limit</b>
+                            </td>
+                            <td style="color: var(--slate-500)">query</td>
+                            <td style="font-style: italic;">false</td>
+                            <td>e.g. limit=10</td>
+                          </tr>
+                          
+                          <tr>
+                            <td>
+                              <b>page</b>
+                            </td>
+                            <td style="color: var(--slate-500)">query</td>
+                            <td style="font-style: italic;">false</td>
+                            <td>e.g. page=1</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section data-content="headers" class="headers-content">
+                    <div class="code-block">
+                    <code>
+                        <span>Authorization:</span>
+                        <span style="font-weight: 600;">Bearer &lt;token&gt;</span>
+                      </code>
+                      
+                    </div>
+                  </section>
+
+                  
+
+                  <section data-content="response" class="response-content">
+                        
+                        <div class="code-block">
+                        <div>
+                          <code style="color: var(--slate-300); font-size: 0.8rem; font-weight: 600">json</code>
+                          <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
+                        </div>
+                        <code>
+                          <pre>{
+  "success": true,
+  "budgets": [
+    {
+      "_id": "string",
+      "user": "string",
+      "trip": "string",
+      "plannedAmount": "number",
+      "spentAmount": "number",
+      "currency": "string | optional",
+      "notes": "string | optional",
+      "createdAt": "Date",
+      "updatedAt": "Date"
+    }
+  ]
+}</pre>
+                        </code>
+                      </div>
+                    </section>
+                </div>
+              </div>
+            </div>
+          </div> <div class="api">
+            <header class="api-header post">
+              <p class="method">POST</p>
+              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/budgets</p>
+              <p style="font-size: 0.9rem; color: var(--slate-600)">Creates a new budget</p>
+
+              <div class="icons">
+              <div class="protected" style="color: var(--slate-400)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22px" height="22px" viewBox="0 -960 960 960" fill="currentColor"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
+                </div>
+
+                <div class="chevron" style="color: var(--slate-700)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                </div>
+              </div>
+            </header>
+
+            <div class="content">
+              <div class="content-wrapper" style="padding-top: 1.2rem;">
+                <header class="content-header" style="display: flex; align-items: center; gap: 0.8rem;">
+                  <div>
+                    <input type="radio" name="content-User: Budgets-1" id="params-User: Budgets-1" value="params" checked="true" />
+                    <label for="params-User: Budgets-1" style="font-size: 0.785rem; font-weight: 600">Params</label>
+                  </div>
+                  
+                  <div>
+                    <input type="radio" name="content-User: Budgets-1" id="headers-User: Budgets-1" value="headers" />
+                    <label for="headers-User: Budgets-1" style="font-size: 0.785rem; font-weight: 600">Headers</label>
+                  </div>
+    
+                  <div>
+                    <input type="radio" name="content-User: Budgets-1" id="body-User: Budgets-1" value="body" />
+                    <label for="body-User: Budgets-1" style="font-size: 0.785rem; font-weight: 600">Body</label>
+                  </div>
+    
+                  <div>
+                    <input type="radio" name="content-User: Budgets-1" id="response-User: Budgets-1" value="response" />
+                    <label for="response-User: Budgets-1" style="font-size: 0.785rem; font-weight: 600">Response</label>
+                  </div>
+                </header>
+    
+                <div class="content-section" style="margin-top: 0.75rem; font-size: 0.88rem; font-weight: 500;">
+                  
+
+                  <section data-content="headers" class="headers-content">
+                    <div class="code-block">
+                    <code>
+                        <span>Content-Type:</span>
+                        <span style="font-weight: 600;">application/json</span>
+                      </code>
+                      <code>
+                        <span>Authorization:</span>
+                        <span style="font-weight: 600;">Bearer &lt;token&gt;</span>
+                      </code>
+                      
+                    </div>
+                  </section>
+
+                  <section data-content="body" class="body-content">
+                        
+                        <div class="code-block">
+                          <div>
+                            <code style="color: var(--slate-300); font-size: 0.8rem; font-weight: 600">json</code>
+                            <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
+                          </div>
+                          <code>
+                            <pre>{
+  ...
+}</pre>
+                          </code>
+                        </div>
+                      </section>
+
+                  <section data-content="response" class="response-content">
+                        
+                        <div class="code-block">
+                        <div>
+                          <code style="color: var(--slate-300); font-size: 0.8rem; font-weight: 600">json</code>
+                          <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
+                        </div>
+                        <code>
+                          <pre>{
+  "success": true,
+  "budget": {
+    "_id": "string",
+    "user": "string",
+    "trip": "string",
+    "plannedAmount": "number",
+    "spentAmount": "number",
+    "currency": "string | optional",
+    "notes": "string | optional",
+    "createdAt": "Date",
+    "updatedAt": "Date"
+  }
+}</pre>
+                        </code>
+                      </div>
+                    </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> <section class="domain">
         <h2>User: Driver Profile</h2>
 
         <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem">
           <div class="api">
             <header class="api-header post">
               <p class="method">POST</p>
-              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/car-service/{user_id?}</p>
+              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/driver-profile/{user_id?}</p>
               <p style="font-size: 0.9rem; color: var(--slate-600)">Creates a driver profile</p>
 
               <div class="icons">

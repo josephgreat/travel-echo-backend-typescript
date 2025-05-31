@@ -26,7 +26,7 @@ const Schema = z.object({
 
 
 /**
- * @api {post} /users/me/expenses
+ * @api {put} /users/me/expenses/:expense_id
  * @desc Creates a new expense
  * @domain {User: Expenses}
  * @use {ContentAuth}

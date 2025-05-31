@@ -100,6 +100,26 @@ export const routes = [
   },
   {
     "group": "/users/me",
+    "path": "/users/me/profile",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile/image",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile/image",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
     "path": "/users/me/memories/:memory_id/images",
     "method": "post"
   },
@@ -136,26 +156,6 @@ export const routes = [
   {
     "group": "/users/me",
     "path": "/users/me/memories/:memory_id",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile/image",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile/image",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile",
     "method": "put"
   }
 ] as const;

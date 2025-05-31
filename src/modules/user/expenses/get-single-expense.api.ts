@@ -21,7 +21,7 @@ import { z } from "zod";
  *      "plannedAmount": "number",
  *      "actualAmount": "number",
  *      "notes": "string | optional",
- *      "receiptImageUrl": "string | optional"
+ *      "receiptImageUrl": "string | optional",
  *      "createdAt": "Date",
  *      "updatedAt": "Date"
  *    }

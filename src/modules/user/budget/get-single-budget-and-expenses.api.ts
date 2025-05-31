@@ -24,7 +24,7 @@ import { z } from "zod";
  *      "notes": "string | optional",
  *      "createdAt": "Date",
  *      "updatedAt": "Date",
- *      "expenses": [...]
+ *      "expenses": [ {...}, {...} ]
  *    }
  * }
  * @par {populate?} @query e.g. populate=user

@@ -1620,7 +1620,28 @@
                           <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                         </div>
                         <code>
-                          <pre>{ "success": true, "budget": { "_id": "string", "user": "string", "trip": "string", "plannedAmount": "number", "spentAmount": "number", "currency": "string | optional", "notes": "string | optional", "createdAt": "Date", "updatedAt": "Date", "expenses": [...] } }</pre>
+                          <pre>{
+  "success": true,
+  "budget": {
+    "_id": "string",
+    "user": "string",
+    "trip": "string",
+    "plannedAmount": "number",
+    "spentAmount": "number",
+    "currency": "string | optional",
+    "notes": "string | optional",
+    "createdAt": "Date",
+    "updatedAt": "Date",
+    "expenses": [
+      {
+        ...
+      },
+      {
+        ...
+      }
+    ]
+  }
+}</pre>
                         </code>
                       </div>
                     </section>
@@ -2113,7 +2134,22 @@
                           <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                         </div>
                         <code>
-                          <pre>{ "success": true, "expense": { "_id": "string", "user": "string", "budget": "string | optional", "trip": "string | optional", "category": "string", "plannedAmount": "number", "actualAmount": "number", "notes": "string | optional", "receiptImageUrl": "string | optional" "createdAt": "Date", "updatedAt": "Date" } }</pre>
+                          <pre>{
+  "success": true,
+  "expense": {
+    "_id": "string",
+    "user": "string",
+    "budget": "string | optional",
+    "trip": "string | optional",
+    "category": "string",
+    "plannedAmount": "number",
+    "actualAmount": "number",
+    "notes": "string | optional",
+    "receiptImageUrl": "string | optional",
+    "createdAt": "Date",
+    "updatedAt": "Date"
+  }
+}</pre>
                         </code>
                       </div>
                     </section>

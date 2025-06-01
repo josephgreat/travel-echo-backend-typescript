@@ -13,6 +13,7 @@ const Schema = z.object(
       })
       .transform((val) => new mongoose.Types.ObjectId(val))
       .optional(),
+    name: z.string({ message: "Budget name is required" }),
     plannedAmount: z
       .number({ message: "Planned amount is required" })
       .min(0, { message: "Planned amount cannot be negative" }),

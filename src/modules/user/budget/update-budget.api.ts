@@ -6,12 +6,13 @@ import { z } from "zod";
 
 const Schema = z.object(
   {
+    name: z.string({ message: "Name must be a string" }).optional(),
     plannedAmount: z
-      .number({ message: "Planned amount is required" })
+      .number({ message: "Planned amount must be a number" })
       .min(0, { message: "Planned amount cannot be negative" })
       .optional(),
     spentAmount: z
-      .number({ message: "Invalid spent amount" })
+      .number({ message: "Spent amount must be a number" })
       .min(0, { message: "Spent amount cannot be negative" })
       .optional(),
     currency: z.string({ message: "Invalid currency" }).optional(),

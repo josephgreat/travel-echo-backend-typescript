@@ -14,6 +14,9 @@ export class Budget {
   public trip?: mongoose.Types.ObjectId;
 
   @prop({ required: true })
+  public name!: string;
+
+  @prop({ required: true })
   public plannedAmount!: number;
 
   @prop({ required: true, default: 0 })

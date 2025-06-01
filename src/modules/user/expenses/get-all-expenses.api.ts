@@ -48,4 +48,4 @@ export default api(
 
     return { expenses };
   })
-)
+);

@@ -4,17 +4,20 @@ import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
 
-export const ZodMemorySchema = z.object({
-  title: z.string({ message: "Title is required" }).min(3, { message: "Title is too short" }),
-  description: z.string({ message: "Invalid description provided" }).optional(),
-  location: z.string({ message: "Invalid location provided" }).optional(),
-  date: z
-    .string({ message: "Invalid date provided" })
-    .optional()
-    .transform((dob) => (dob ? new Date(dob) : undefined)),
-  tags: z.array(z.string({ message: "Invalid tag provided" })).optional(),
-  isPublic: z.boolean({ message: "Public status should be true or false" }).optional()
-}, { message: "No request body provided" });
+export const ZodMemorySchema = z.object(
+  {
+    title: z.string({ message: "Title is required" }).min(3, { message: "Title is too short" }),
+    description: z.string({ message: "Invalid description provided" }).optional(),
+    location: z.string({ message: "Invalid location provided" }).optional(),
+    date: z
+      .string({ message: "Invalid date provided" })
+      .optional()
+      .transform((dob) => (dob ? new Date(dob) : undefined)),
+    tags: z.array(z.string({ message: "Invalid tag provided" })).optional(),
+    isPublic: z.boolean({ message: "Public status should be true or false" }).optional()
+  },
+  { message: "No request body provided" }
+);
 
 /**
  * @api {post} /users/me/memories

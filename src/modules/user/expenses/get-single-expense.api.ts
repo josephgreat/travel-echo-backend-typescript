@@ -33,12 +33,8 @@ import { z } from "zod";
 const Schema = z.object({
   expense_id: z
     .string({ message: "Expense ID is requuired" })
-    .refine(
-      (val) => isObjectIdOrHexString(val),
-      { message: "Invalid expense ID" }
-    )
-})
-
+    .refine((val) => isObjectIdOrHexString(val), { message: "Invalid expense ID" })
+});
 
 export default api(
   {
@@ -60,4 +56,4 @@ export default api(
 
     return { expenses };
   })
-)
+);

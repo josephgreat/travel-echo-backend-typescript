@@ -27,7 +27,7 @@ export default function parseRequestQuery(req: Request, res: Response, next: Nex
           const [sign, ...numbers] = trimmedValue.split("");
           filters[key] = {
             [sign === "<" ? "$lt" : "$gt"]: Number(numbers.join(""))
-          }
+          };
         } else if (isNaN(Number(trimmedValue))) {
           filters[key] = trimmedValue;
         } else {

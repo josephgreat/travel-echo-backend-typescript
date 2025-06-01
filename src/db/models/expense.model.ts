@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { User } from "./user.model";
 import { Trip } from "./trip.model";
 import { Budget } from "./budget.model";
+import { CloudinaryImage } from "./models";
 
 @modelOptions({
   schemaOptions: { timestamps: true }
@@ -33,7 +34,7 @@ export class Expense {
   public notes?: string;
 
   @prop()
-  public receiptImageUrl?:string;
+  public receipt?: CloudinaryImage;
 }
- 
+
 export const ExpenseModel = getModelForClass(Expense);

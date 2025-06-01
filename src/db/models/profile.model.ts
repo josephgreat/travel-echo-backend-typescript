@@ -2,31 +2,12 @@ import { getModelForClass, modelOptions, pre, prop } from "@typegoose/typegoose"
 import { computeAge } from "#src/utils/helpers";
 import { MIN_USER_AGE } from "#src/utils/constants";
 import mongoose from "mongoose";
+import { CloudinaryImage } from "./models";
 
 export enum Gender {
   Male = "MALE",
   Female = "FEMALE",
   Other = "OTHER"
-}
-
-export class ProfileImage {
-  @prop()
-  public url!: string;
-
-  @prop()
-  public name!: string;
-
-  @prop()
-  public publicId!: string;
-
-  @prop()
-  public assetId!: string;
-
-  @prop()
-  public format!: string;
-
-  @prop()
-  public bytes!: number;
 }
 
 export class School {
@@ -60,7 +41,7 @@ export class Profile {
   public gender?: Gender;
 
   @prop()
-  public image?: ProfileImage;
+  public image?: CloudinaryImage;
 
   @prop()
   public location?: string;

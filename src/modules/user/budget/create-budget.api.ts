@@ -4,30 +4,27 @@ import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import mongoose from "mongoose";
 import { z } from "zod";
 
-const Schema = z.object({
-  trip: z
-    .string({ message: "Invalid Trip ID" })
-    .refine(
-      (val) => val === undefined || mongoose.isObjectIdOrHexString(val),
-      { message: "Invalid Trip ID" }
-    )
-    .transform((val) => new mongoose.Types.ObjectId(val))
-    .optional(),
-  plannedAmount: z
-    .number({ message: "Planned amount is required" })
-    .min(0, { message: "Planned amount cannot be negative" }),
-  spentAmount: z
-    .number({ message: "Invalid spent amount" })
-    .min(0, { message: "Spent amount cannot be negative" })
-    .optional(),
-  currency: z
-    .string({ message: "Invalid currency" })
-    .optional(),
-  notes: z
-    .string({ message: "Invalid notes" })
-    .optional()
-}, { message: "No request body provided"})
-
+const Schema = z.object(
+  {
+    trip: z
+      .string({ message: "Invalid Trip ID" })
+      .refine((val) => val === undefined || mongoose.isObjectIdOrHexString(val), {
+        message: "Invalid Trip ID"
+      })
+      .transform((val) => new mongoose.Types.ObjectId(val))
+      .optional(),
+    plannedAmount: z
+      .number({ message: "Planned amount is required" })
+      .min(0, { message: "Planned amount cannot be negative" }),
+    spentAmount: z
+      .number({ message: "Invalid spent amount" })
+      .min(0, { message: "Spent amount cannot be negative" })
+      .optional(),
+    currency: z.string({ message: "Invalid currency" }).optional(),
+    notes: z.string({ message: "Invalid notes" }).optional()
+  },
+  { message: "No request body provided" }
+);
 
 /**
  * @api {post} /users/me/budgets
@@ -53,7 +50,6 @@ const Schema = z.object({
  * }
  */
 
-
 export default api(
   {
     group: "/users/me",
@@ -64,7 +60,7 @@ export default api(
   defineHandler(async (req) => {
     const data = req.body as z.infer<typeof Schema>;
     const { id } = req.user!;
-    
+
     const budget = await budgetRepository.create({
       user: id,
       ...data
@@ -72,6 +68,6 @@ export default api(
 
     return {
       budget
-    }
+    };
   })
-)
+);

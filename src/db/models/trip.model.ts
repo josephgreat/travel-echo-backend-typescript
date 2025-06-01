@@ -16,7 +16,7 @@ export class Trip {
   public description?: string;
 
   @prop({ type: () => [String] })
-  public locations?: string[]
+  public locations?: string[];
 
   @prop()
   public startDate?: Date;
@@ -27,5 +27,5 @@ export class Trip {
   @prop({ type: () => [String] })
   public arrayField!: string[];
 }
- 
+
 export const TripModel = getModelForClass(Trip);

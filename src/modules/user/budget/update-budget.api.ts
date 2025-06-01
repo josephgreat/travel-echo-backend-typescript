@@ -4,23 +4,21 @@ import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
 
-const Schema = z.object({
-  plannedAmount: z
-    .number({ message: "Planned amount is required" })
-    .min(0, { message: "Planned amount cannot be negative" })
-    .optional(),
-  spentAmount: z
-    .number({ message: "Invalid spent amount" })
-    .min(0, { message: "Spent amount cannot be negative" })
-    .optional(),
-  currency: z
-    .string({ message: "Invalid currency" })
-    .optional(),
-  notes: z
-    .string({ message: "Invalid notes" })
-    .optional()
-}, { message: "No request body provided"})
-
+const Schema = z.object(
+  {
+    plannedAmount: z
+      .number({ message: "Planned amount is required" })
+      .min(0, { message: "Planned amount cannot be negative" })
+      .optional(),
+    spentAmount: z
+      .number({ message: "Invalid spent amount" })
+      .min(0, { message: "Spent amount cannot be negative" })
+      .optional(),
+    currency: z.string({ message: "Invalid currency" }).optional(),
+    notes: z.string({ message: "Invalid notes" }).optional()
+  },
+  { message: "No request body provided" }
+);
 
 /**
  * @api {put} /users/me/budgets/:budget_id
@@ -46,7 +44,6 @@ const Schema = z.object({
  * }
  */
 
-
 export default api(
   {
     group: "/users/me",
@@ -59,11 +56,9 @@ export default api(
     const { id } = req.user!;
     const { budget_id } = req.params;
 
-    const budget = await budgetRepository.updateOne(
-      { _id: budget_id, user: id },
-      data,
-      { returning: true }
-    );
+    const budget = await budgetRepository.updateOne({ _id: budget_id, user: id }, data, {
+      returning: true
+    });
 
     if (!budget) {
       throw HttpException.notFound("Budget not found");
@@ -71,6 +66,6 @@ export default api(
 
     return {
       budget
-    }
+    };
   })
-)
+);

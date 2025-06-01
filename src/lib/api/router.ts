@@ -34,10 +34,7 @@ const addLeadingSlash = (str: string | undefined) => {
   return str.startsWith("/") ? str : `/${str}`;
 };
 
-export const generateRoutes = async (
-  expressApp: Express,
-  options: GenerateRoutesOptions = {}
-) => {
+export const generateRoutes = async (expressApp: Express, options: GenerateRoutesOptions = {}) => {
   const router: Router = Router();
 
   const { globalMiddleware = [], groupMiddleware = {}, globalPrefix = "" } = options;

@@ -5,9 +5,9 @@ import { memoryRepository } from "#src/db/repositories/memory.repository";
 import { memoryImageRepository } from "#src/db/repositories/memory-image.repository";
 import { MAX_MEMORY_IMAGE_SIZE, MAX_MEMORY_IMAGES_PER_UPLOAD } from "#src/utils/constants";
 import { randomString } from "#src/utils/helpers";
-import busboy from "busboy";
 import { MemoryImage } from "#src/db/models/memory-image.model";
 import cloudinary from "cloudinary";
+import { AsyncBusboy, FileUploadResult } from "#src/utils/async-busboy";
 
 /**
  * @api {post} /users/me/memories/:memory_id/images
@@ -35,12 +35,6 @@ import cloudinary from "cloudinary";
  * }
  */
 
-interface ImageInfo {
-  name: string;
-  success: boolean;
-  error?: string;
-}
-
 export default api(
   {
     group: "/users/me",
@@ -56,7 +50,86 @@ export default api(
       throw HttpException.notFound("Memory not found");
     }
 
-    return new Promise((resolve, reject) => {
+    const uploader = new AsyncBusboy({
+      headers: req.headers,
+      limits: {
+        files: MAX_MEMORY_IMAGES_PER_UPLOAD,
+        fileSize: MAX_MEMORY_IMAGE_SIZE
+      }
+    });
+
+    uploader.handler(async (name, file) => {
+      const imagePublicId = `IMG_MEM_${memory_id.toString()}_${randomString(16, "numeric")}`;
+
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.v2.uploader.upload_stream(
+          {
+            asset_folder: `MEMORY_IMAGES/${memory_id}`,
+            public_id: imagePublicId,
+            display_name: imagePublicId,
+            unique_filename: true
+          },
+          (error, result) => {
+            if (error) return reject(error);
+
+            if (result) {
+              resolve({
+                url: result.secure_url,
+                name: result.display_name,
+                publicId: result.public_id,
+                assetId: result.asset_id,
+                format: result.format,
+                bytes: result.bytes,
+                user: id,
+                memory: memory._id
+              });
+            } else {
+              reject(new Error("No result from Cloudinary"));
+            }
+          }
+        );
+        file.pipe(stream);
+      });
+    });
+
+    const { error, data } = await uploader.upload<Partial<MemoryImage>>(req);
+
+    if (!data || error) {
+      throw HttpException.badRequest(error?.message || "Upload failed");
+    }
+
+    const failedImages: FileUploadResult[] = [];
+    const successfulImages: FileUploadResult[] = [];
+    const memoryImageData: Partial<MemoryImage>[] = [];
+
+    data.forEach((image) => {
+      if (image.error || !image.data) {
+        failedImages.push(image);
+      } else {
+        successfulImages.push(image);
+        memoryImageData.push(image.data);
+      }
+    });
+
+    await memoryImageRepository.insertMany(memoryImageData);
+
+    const newImageCount = (memory.imageCount || 0) + data.length;
+
+    await memoryRepository.updateOne(
+      memory._id,
+      { imageCount: newImageCount },
+      { returning: true }
+    );
+
+    return {
+      success: true,
+      totalFilesReceived: data.length,
+      filesUploaded: successfulImages.length,
+      filesFailed: failedImages.length,
+      images: memoryImageData
+    };
+
+    /* return new Promise((resolve, reject) => {
       const images: ImageInfo[] = [];
 
       const uploadPromises: Promise<MemoryImage>[] = [];
@@ -168,6 +241,6 @@ export default api(
       });
 
       req.pipe(bb);
-    });
+    }); */
   })
 );

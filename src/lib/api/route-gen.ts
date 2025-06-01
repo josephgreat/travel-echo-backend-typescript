@@ -69,10 +69,7 @@ export const generateRoutes = async (expressApp: Express, options: GenerateRoute
   const apis: InternalApiInfo[] = [];
 
   for (const entry of entries) {
-    const module = (await import(path.resolve(entry))) as Record<
-      string,
-      ApiDefinition
-    >;
+    const module = (await import(path.resolve(entry))) as Record<string, ApiDefinition>;
 
     for (const key of Object.keys(module)) {
       const api = module[key];

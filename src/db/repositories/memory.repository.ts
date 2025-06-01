@@ -11,6 +11,7 @@ export interface FindMemoryByUserIdOptions extends RepositoryQueryOptions<Memory
   description?: string;
   location?: string;
   tag?: string;
+  where?: Record<string, unknown>;
 }
 
 export interface FindMemoryByUserIdResult extends Memory {
@@ -31,11 +32,25 @@ export class MemoryRepository extends Repository<Memory> {
     }
     const IMAGE_LIMIT = 5;
     const id = castToObjectId(userId);
-    const { sort, skip, limit, select, search, title, description, location, tag } = options || {};
+    const { 
+      where, 
+      sort, 
+      skip, 
+      limit, 
+      select, 
+      search, 
+      title, 
+      description, 
+      location, 
+      tag 
+    } = options || {};
 
-    const filters: Record<string, unknown> = {};
+    const filters: Record<string, unknown> = {
+      user: id,
+      ...where
+    };
 
-    filters.user = id;
+    //filters.user = id;
     if (search) {
       const regex = new RegExp(search, "i");
       filters.$or = [{ title: regex }, { location: regex }, { tags: regex }];

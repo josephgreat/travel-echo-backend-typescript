@@ -2,12 +2,8 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import { HttpException, HttpResponse } from "./http";
 import { z, ZodError } from "zod";
 
-export type DefineHandlerFunction = (
-  fn: (
-    req: Request,
-    res: Response,
-    next?: NextFunction
-  ) => void | Promise<void> | unknown | Promise<unknown>
+export type DefineHandlerFunction = <T>(
+  fn: (req: Request, res: Response, next: NextFunction) => void | Promise<void> | T | Promise<T>
 ) => RequestHandler;
 /**
  * A higher-order function that wraps an asynchronous handler function with error handling and response formatting.
@@ -22,7 +18,9 @@ export type DefineHandlerFunction = (
  * @returns An Express middleware function that wraps the handler.
  */
 
-export const defineHandler: DefineHandlerFunction = (fn) => {
+export const defineHandler: DefineHandlerFunction = <T>(
+  fn: (req: Request, res: Response, next: NextFunction) => T | Promise<T>
+) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await fn(req, res, next);
@@ -46,7 +44,7 @@ export const defineHandler: DefineHandlerFunction = (fn) => {
         result.send(res);
       } else {
         try {
-          res.status(200).json({ success: true, ...result });
+          res.status(200).json({ success: true, statusCode: res.status, ...result });
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           res.status(200).send(String(result));

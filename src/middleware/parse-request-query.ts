@@ -23,6 +23,11 @@ export default function parseRequestQuery(req: Request, res: Response, next: Nex
         const trimmedValue = value.trim();
         if (trimmedValue === "false" || trimmedValue === "true") {
           filters[key] = Boolean(trimmedValue);
+        } else if (trimmedValue.startsWith("<") || trimmedValue.startsWith(">")) {
+          const [sign, ...numbers] = trimmedValue.split("");
+          filters[key] = {
+            [sign === "<" ? "$lt" : "$gt"]: Number(numbers.join(""))
+          }
         } else if (isNaN(Number(trimmedValue))) {
           filters[key] = trimmedValue;
         } else {

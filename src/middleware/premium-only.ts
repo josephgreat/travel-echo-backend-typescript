@@ -1,5 +1,5 @@
 import { UserPlan } from "#src/db/models/user.model";
-import { subscriptionRepository } from "#src/db/repositories/subscription-repository";
+import { subscriptionRepository } from "#src/db/repositories/subscription.repository";
 import { userRepository } from "#src/db/repositories/user.repository";
 import { Request, Response, NextFunction } from "express";
 

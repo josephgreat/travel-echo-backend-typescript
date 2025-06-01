@@ -6,7 +6,7 @@ export type ApiRequestHandler =
   | ((req: Request, res: Response, next: NextFunction) => unknown | Promise<unknown>);
 
 export interface ApiOptions {
-  method: "get" | "post" | "put" | "patch" | "delete" | "head";
+  method?: "get" | "post" | "put" | "patch" | "delete" | "head";
   path: string;
   group?: string;
   expose?: boolean;

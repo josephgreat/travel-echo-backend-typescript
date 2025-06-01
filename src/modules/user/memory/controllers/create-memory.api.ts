@@ -14,7 +14,7 @@ export const ZodMemorySchema = z.object({
     .transform((dob) => (dob ? new Date(dob) : undefined)),
   tags: z.array(z.string({ message: "Invalid tag provided" })).optional(),
   isPublic: z.boolean({ message: "Public status should be true or false" }).optional()
-});
+}, { message: "No request body provided" });
 
 /**
  * @api {post} /users/me/memories

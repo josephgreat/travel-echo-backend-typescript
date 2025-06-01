@@ -55,9 +55,10 @@ export default api(
 
     const { search, title, description, location, tag } = parseSearchQueries(req);
 
-    const { sort, select, limit = GET_REQUEST_DATA_LIMIT, skip = 0 } = req.parsedQuery || {};
+    const { where, sort, select, limit = GET_REQUEST_DATA_LIMIT, skip = 0 } = req.parsedQuery || {};
 
     const memories = await memoryRepository.findMemoryByUserId(id, {
+      where,
       sort,
       select,
       limit,

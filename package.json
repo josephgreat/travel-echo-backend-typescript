@@ -11,7 +11,8 @@
     "start": "node ./bin/clear-dist && tsc && node ./dist/server.js",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "create:model": "node ./bin/create-model.js"
   },
   "imports": {
     "#src/*": "./dist/*.js"

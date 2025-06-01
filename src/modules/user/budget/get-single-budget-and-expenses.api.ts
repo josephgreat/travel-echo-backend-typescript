@@ -34,11 +34,8 @@ import { z } from "zod";
 const Schema = z.object({
   budget_id: z
     .string({ message: "Budget ID is requuired" })
-    .refine(
-      (val) => isObjectIdOrHexString(val),
-      { message: "Invalid budget ID" }
-    )
-})
+    .refine((val) => isObjectIdOrHexString(val), { message: "Invalid budget ID" })
+});
 
 export default api(
   {
@@ -53,14 +50,14 @@ export default api(
     const { skip, limit, populate, select } = req.parsedQuery || {};
 
     const result = await budgetRepository.findBudgetAndExpenses(
-      { 
-        _id: castToObjectId(budget_id), 
-        user: castToObjectId(id) 
+      {
+        _id: castToObjectId(budget_id),
+        user: castToObjectId(id)
       },
       { populate, select, skip, limit }
-    )
+    );
 
-    const budget = result[0]
+    const budget = result[0];
 
     if (!budget) {
       throw HttpException.notFound("Budget not found");

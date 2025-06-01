@@ -1,0 +1,160 @@
+{
+  "count": 31,
+  "routes": [
+    {
+      "group": "/auth",
+      "path": "/auth/recovery/send-otp",
+      "method": "post"
+    },
+    {
+      "group": "/auth",
+      "path": "/auth/recovery/verify-otp",
+      "method": "post"
+    },
+    {
+      "group": "/auth",
+      "path": "/auth/recovery/reset-password",
+      "method": "post"
+    },
+    {
+      "group": "/auth",
+      "path": "/auth/verification/send-otp",
+      "method": "post"
+    },
+    {
+      "group": "/auth",
+      "path": "/auth/verification/verify",
+      "method": "post"
+    },
+    {
+      "group": "/auth",
+      "path": "/auth/login",
+      "method": "post"
+    },
+    {
+      "group": "/auth",
+      "path": "/auth/register",
+      "method": "post"
+    },
+    {
+      "group": "/google",
+      "path": "/google",
+      "method": "get"
+    },
+    {
+      "group": "/google",
+      "path": "/google/callback",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/expenses",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/expenses",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/expenses/:expense_id",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/expenses/:expense_id",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/budgets",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/budgets",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/budgets/:budget_id/expenses",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/budgets/:budget_id",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/budgets/:budget_id",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/driver-profile/{:user_id}",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories/:memory_id/images",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories",
+      "method": "post"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories/:memory_id/images/delete",
+      "method": "patch"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories/:memory_id",
+      "method": "delete"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories/:memory_id/images",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories/:memory_id/images/:image_id",
+      "method": "put"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/memories/:memory_id",
+      "method": "put"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/profile",
+      "method": "get"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/profile/image",
+      "method": "delete"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/profile/image",
+      "method": "put"
+    },
+    {
+      "group": "/users/me",
+      "path": "/users/me/profile",
+      "method": "put"
+    }
+  ]
+}

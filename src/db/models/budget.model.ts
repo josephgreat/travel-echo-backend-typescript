@@ -25,5 +25,5 @@ export class Budget {
   @prop()
   public notes?: string;
 }
- 
+
 export const BudgetModel = getModelForClass(Budget);

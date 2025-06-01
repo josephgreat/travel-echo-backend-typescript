@@ -32,7 +32,9 @@ export class AsyncBusboy {
     return this;
   }
 
-  async upload<T = Buffer>(req: Request): Promise<{ data: FileUploadResult<T>[] | null, error: Error | null }> {
+  async upload<T = Buffer>(
+    req: Request
+  ): Promise<{ data: FileUploadResult<T>[] | null; error: Error | null }> {
     try {
       const result = await this.uploadPromise<T>(req);
       return {
@@ -53,10 +55,10 @@ export class AsyncBusboy {
       this.filePromises = [];
       this.hasFinished = false;
       this.hasErrored = false;
-      
+
       // Create new busboy instance for each upload
       this.bb = busboy(this.options);
-      
+
       let rejectCalled = false;
       let resolveCalled = false;
 
@@ -88,7 +90,7 @@ export class AsyncBusboy {
       this.bb.on("file", (name, file, info) => {
         // Only process files that have actual content
         // Skip empty files or files with no filename
-        if (!info.filename || info.filename.trim() === '') {
+        if (!info.filename || info.filename.trim() === "") {
           file.resume(); // Drain the empty stream
           return;
         }
@@ -99,10 +101,10 @@ export class AsyncBusboy {
 
       this.bb.on("finish", async () => {
         this.hasFinished = true;
-        
+
         // Wait a bit to ensure all file events have been processed
-        await new Promise(resolve => setImmediate(resolve));
-        
+        await new Promise((resolve) => setImmediate(resolve));
+
         if (this.hasErrored) {
           return; // Already rejected
         }
@@ -115,21 +117,22 @@ export class AsyncBusboy {
         try {
           const results = await Promise.allSettled(this.filePromises);
           const fileResults: FileUploadResult<T>[] = results.map((result, index) => {
-            if (result.status === 'fulfilled') {
+            if (result.status === "fulfilled") {
               return result.value as FileUploadResult<T>;
             } else {
               // Create error result for failed files
               return {
                 name: `file_${index}`,
-                filename: 'unknown',
-                encoding: 'unknown',
-                mimeType: 'unknown',
-                error: result.reason instanceof Error ? result.reason : new Error(String(result.reason)),
+                filename: "unknown",
+                encoding: "unknown",
+                mimeType: "unknown",
+                error:
+                  result.reason instanceof Error ? result.reason : new Error(String(result.reason)),
                 data: null
               } as FileUploadResult<T>;
             }
           });
-          
+
           safeResolve(fileResults);
         } catch (error) {
           safeReject(error instanceof Error ? error : new Error(String(error)));
@@ -138,7 +141,7 @@ export class AsyncBusboy {
 
       // Pipe the request to busboy
       req.pipe(this.bb);
-      
+
       // Set a timeout to prevent hanging
       const timeout = setTimeout(() => {
         if (!this.hasFinished && !this.hasErrored) {
@@ -161,8 +164,8 @@ export class AsyncBusboy {
   }
 
   private async processFile<T>(
-    name: string, 
-    file: Stream.Readable & { truncated?: boolean }, 
+    name: string,
+    file: Stream.Readable & { truncated?: boolean },
     info: FileInfo
   ): Promise<FileUploadResult<T>> {
     try {
@@ -170,10 +173,10 @@ export class AsyncBusboy {
 
       if (this.handlerFn) {
         // Use custom handler if provided
-        data = await this.handlerFn(name, file, info) as T;
+        data = (await this.handlerFn(name, file, info)) as T;
       } else {
         // Default behavior: collect file data as buffer
-        data = await this.collectFileData(file) as T;
+        data = (await this.collectFileData(file)) as T;
       }
 
       return {
@@ -187,7 +190,7 @@ export class AsyncBusboy {
     } catch (error) {
       // Drain the file stream to prevent hanging
       file.resume();
-      
+
       return {
         name,
         filename: info.filename,
@@ -227,13 +230,13 @@ export class AsyncBusboy {
               reject(new Error("File is empty or contains no data"));
               return;
             }
-            
+
             const buffer = Buffer.concat(chunks);
             if (buffer.length === 0) {
               reject(new Error("File buffer is empty"));
               return;
             }
-            
+
             resolve(buffer);
           } catch (err) {
             reject(err);

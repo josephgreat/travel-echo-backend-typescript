@@ -35,7 +35,6 @@ import { AsyncBusboy, FileUploadResult } from "#src/utils/async-busboy";
  * }
  */
 
-
 export default api(
   {
     group: "/users/me",
@@ -57,11 +56,11 @@ export default api(
         files: MAX_MEMORY_IMAGES_PER_UPLOAD,
         fileSize: MAX_MEMORY_IMAGE_SIZE
       }
-    })
+    });
 
     uploader.handler(async (name, file) => {
       const imagePublicId = `IMG_MEM_${memory_id.toString()}_${randomString(16, "numeric")}`;
-      
+
       return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
@@ -71,8 +70,8 @@ export default api(
             unique_filename: true
           },
           (error, result) => {
-            if (error) return reject(error)
-            
+            if (error) return reject(error);
+
             if (result) {
               resolve({
                 url: result.secure_url,
@@ -96,7 +95,7 @@ export default api(
     const { error, data } = await uploader.upload<Partial<MemoryImage>>(req);
 
     if (!data || error) {
-      throw HttpException.badRequest(error?.message || "Upload failed")
+      throw HttpException.badRequest(error?.message || "Upload failed");
     }
 
     const failedImages: FileUploadResult[] = [];
@@ -128,7 +127,7 @@ export default api(
       filesUploaded: successfulImages.length,
       filesFailed: failedImages.length,
       images: memoryImageData
-    }
+    };
 
     /* return new Promise((resolve, reject) => {
       const images: ImageInfo[] = [];

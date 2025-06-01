@@ -5,7 +5,7 @@ import { castToObjectId } from "#src/utils/helpers";
 import { Expense } from "../models/expense.model";
 
 interface BudgetWithExpenses extends Budget {
-  expenses: Expense[]
+  expenses: Expense[];
 }
 
 export class BudgetRepository extends Repository<Budget> {
@@ -13,15 +13,13 @@ export class BudgetRepository extends Repository<Budget> {
     super(BudgetModel);
   }
 
-  async findBudgetAndExpenses(filter: string | mongoose.Types.ObjectId | Partial<Fields<Budget>>, options: RepositoryQueryOptions<Budget> = {}) {
-    const {
-      skip,
-      limit,
-      select,
-      sort,
-    } = options;
+  async findBudgetAndExpenses(
+    filter: string | mongoose.Types.ObjectId | Partial<Fields<Budget>>,
+    options: RepositoryQueryOptions<Budget> = {}
+  ) {
+    const { skip, limit, select, sort } = options;
 
-    let filters: Partial<Fields<Budget>> = {}
+    let filters: Partial<Fields<Budget>> = {};
 
     if (typeof filter === "string") {
       if (!isObjectIdOrHexString(filter)) {
@@ -31,28 +29,28 @@ export class BudgetRepository extends Repository<Budget> {
     } else if (filter instanceof mongoose.Types.ObjectId) {
       filters._id = filter;
     } else {
-      filters = { ...filter }
+      filters = { ...filter };
     }
 
     const mainPipeline: PipelineStage[] = [];
     const expensePipeline: PipelineStage.FacetPipelineStage[] = [];
 
     if (skip && skip > 0) {
-      expensePipeline.push({ $skip: skip })
+      expensePipeline.push({ $skip: skip });
     }
 
     if (limit && limit > 0) {
-      expensePipeline.push({ $limit: limit })
+      expensePipeline.push({ $limit: limit });
     }
 
     if (select) {
       const selectArray = Array.isArray(select) ? select : [select];
       const projection = Object.fromEntries(selectArray.map((field) => [field, 1]));
-      expensePipeline.push({ $project: projection })
+      expensePipeline.push({ $project: projection });
     }
 
     if (sort) {
-      expensePipeline.push({ $sort: this.normalizeSort(sort) })
+      expensePipeline.push({ $sort: this.normalizeSort(sort) });
     }
 
     mainPipeline.push({ $match: filters });
@@ -61,10 +59,7 @@ export class BudgetRepository extends Repository<Budget> {
       $lookup: {
         from: "expenses",
         let: { budgetId: "$_id" },
-        pipeline: [
-          { $match: { $expr: { $eq: ["$budget", "$$budgetId"] } } },
-          ...expensePipeline
-        ],
+        pipeline: [{ $match: { $expr: { $eq: ["$budget", "$$budgetId"] } } }, ...expensePipeline],
         as: "expenses"
       }
     });

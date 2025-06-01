@@ -1,21 +1,21 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 /**
- * 
- * @param {string} name 
+ *
+ * @param {string} name
  * @returns {string}
  */
 function toKebabCase(name) {
   return name
     .toLowerCase()
-    .replace(/[\s_]+/g, '-')
-    .replace(/[^a-z0-9\-]/g, '');
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "");
 }
 
 /**
- * 
- * @param {string} name 
+ *
+ * @param {string} name
  * @returns {string}
  */
 function toPascalCase(name) {
@@ -23,20 +23,19 @@ function toPascalCase(name) {
     .split("-")
     .map((word) => word.toLowerCase())
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join("")
+    .join("");
 }
 
-
 /**
- * 
- * @param {string} modelName 
+ *
+ * @param {string} modelName
  * @param {object} options
  */
 function createModelTemplate(modelName, options) {
   const kebabName = toKebabCase(modelName);
   const pascalName = toPascalCase(modelName);
   const fileName = `${kebabName}.model.ts`;
-  const modelsDir = path.resolve(__dirname, '../src/db/models');
+  const modelsDir = path.resolve(__dirname, "../src/db/models");
   const filePath = path.join(modelsDir, fileName);
   const { force } = options;
 
@@ -83,7 +82,7 @@ export const ${pascalName}Model = getModelForClass(${pascalName});
 function main() {
   const args = process.argv.slice(2);
   if (args.length < 1) {
-    console.error('Usage: npm run create:model <model-name>');
+    console.error("Usage: npm run create:model <model-name>");
     process.exit(1);
   }
 
@@ -91,8 +90,8 @@ function main() {
   const flags = args.slice(1);
 
   const options = {
-    force: flags.includes('f') || flags.includes('force'),
-  }
+    force: flags.includes("f") || flags.includes("force")
+  };
 
   createModelTemplate(modelName, options);
 }

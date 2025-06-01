@@ -46,4 +46,4 @@ export default api(
 
     return { budgets };
   })
-)
+);

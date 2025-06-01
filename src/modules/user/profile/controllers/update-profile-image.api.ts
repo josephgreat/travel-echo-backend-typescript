@@ -1,4 +1,4 @@
-import { ProfileImage } from "#src/db/models/profile.model";
+import { CloudinaryImage } from "#src/db/models/models";
 import { profileRepository } from "#src/db/repositories/profile.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
@@ -7,7 +7,6 @@ import { AsyncBusboy } from "#src/utils/async-busboy";
 import { MAX_PROFILE_IMAGE_SIZE } from "#src/utils/constants";
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
-
 /**
  * @api {put} /users/me/profile/image
  * @domain {User: Profile}
@@ -18,8 +17,8 @@ import cloudinary from "cloudinary";
  *  "success": true,
  *  "image": {
  *    "url": "https://res.cloudinary.com/...IMG_PRO_68122116ecccbf17300a8829.png",
- *    "name": "IMG_PRO_IMG_PRO_68122116ecccbf17300a8829",
- *    "publicId": "IMG_PRO_IMG_PRO_68122116ecccbf17300a8829",
+ *    "name": "IMG_PRO_68122116ecccbf17300a8829",
+ *    "publicId": "IMG_PRO_68122116ecccbf17300a8829",
  *    "assetId": "63545234234344",
  *    "format": "jpg",
  *    "bytes": 67541
@@ -56,7 +55,7 @@ export default api(
             unique_filename: true
           },
           (error, result) => {
-            if (error) return reject(error)
+            if (error) return reject(error);
 
             if (result) {
               resolve({
@@ -77,10 +76,10 @@ export default api(
       });
     });
 
-    const { error, data } = await uploader.upload<ProfileImage>(req);
+    const { error, data } = await uploader.upload<CloudinaryImage>(req);
 
     if (!data || !data[0].data || error) {
-      throw HttpException.badRequest(error?.message || "Upload failed")
+      throw HttpException.badRequest(error?.message || "Upload failed");
     }
 
     if (profile.image) {
@@ -119,7 +118,7 @@ export default api(
       bb.on("file", (fileName, file) => {
         fileInfo.exists = true;
 
-        const uploadPromise = new Promise<ProfileImage>((uploadResolve, uploadReject) => {
+        const uploadPromise = new Promise<CloudinaryImage>((uploadResolve, uploadReject) => {
           const stream = cloudinary.v2.uploader.upload_stream(
             {
               asset_folder: "PROFILE_IMAGES",

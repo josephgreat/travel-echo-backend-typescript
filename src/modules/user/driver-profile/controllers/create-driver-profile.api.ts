@@ -16,7 +16,9 @@ export const Schema = z.object({
       color: z.string({ message: "Car color is required" }).trim(),
       licensePlate: z
         .string({ message: "Car license plate is required" })
-        .min(MIN_LICENSE_PLATE_LENGTH, { message: `Car license plate must be at least ${MIN_LICENSE_PLATE_LENGTH} characters long` })
+        .min(MIN_LICENSE_PLATE_LENGTH, {
+          message: `Car license plate must be at least ${MIN_LICENSE_PLATE_LENGTH} characters long`
+        })
     })
     .optional(),
   phoneNumber: z.string({ message: "Invalid phone number provided" }).optional(),

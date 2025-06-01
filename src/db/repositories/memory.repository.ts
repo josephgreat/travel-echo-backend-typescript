@@ -32,18 +32,8 @@ export class MemoryRepository extends Repository<Memory> {
     }
     const IMAGE_LIMIT = 5;
     const id = castToObjectId(userId);
-    const { 
-      where, 
-      sort, 
-      skip, 
-      limit, 
-      select, 
-      search, 
-      title, 
-      description, 
-      location, 
-      tag 
-    } = options || {};
+    const { where, sort, skip, limit, select, search, title, description, location, tag } =
+      options || {};
 
     const filters: Record<string, unknown> = {
       user: id,

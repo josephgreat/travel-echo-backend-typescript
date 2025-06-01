@@ -31,8 +31,6 @@ export interface QueryFilterOptions<T> {
   in?: Partial<Record<keyof Fields<T>, Array<Fields<T>[keyof Fields<T>]>>>;
 }
 
-
-
 export class Repository<T> {
   constructor(protected readonly model: ReturnModelType<new () => T>) {}
 
@@ -142,27 +140,32 @@ export class Repository<T> {
 
   async createUnique(
     indexes: {
-      [K in keyof T]?: T[K] | {
-        value?: T[K],
-        forceUnique?: boolean
-      }
+      [K in keyof T]?:
+        | T[K]
+        | {
+            value?: T[K];
+            forceUnique?: boolean;
+          };
     },
-    fields: Partial<T>,
+    fields: Partial<T>
   ) {
-
     const normalizedIndexes = Object.fromEntries(
       Object.entries(indexes).map(([key, value]) => {
         if (typeof value === "object" && value !== null && "value" in value) {
           return [key, value.value];
         }
-        return [key, value]
+        return [key, value];
       })
     ) as Partial<Record<keyof T, T[keyof T]>>;
 
-    const forceUniqueFields = Object
-      .entries(indexes)
+    const forceUniqueFields = Object.entries(indexes)
       .map(([key, value]) => {
-        if (typeof value === "object" && value !== null && "forceUnique" in value && value.forceUnique) {
+        if (
+          typeof value === "object" &&
+          value !== null &&
+          "forceUnique" in value &&
+          value.forceUnique
+        ) {
           return key;
         }
       })
@@ -176,47 +179,47 @@ export class Repository<T> {
 
     if (!forceUniqueFields.length) {
       const error = new Error("One or more duplicate fields found");
-      error.name = "DUPLICATE_FIELD_ERROR"
+      error.name = "DUPLICATE_FIELD_ERROR";
       throw error;
     }
-    
+
     const retries = UNIQUE_VALUE_GENERATION_RETRIES;
     const updatedFields = { ...fields };
     const updatedIndexes = { ...normalizedIndexes };
-    
+
     const uniqueFieldPromises = forceUniqueFields.map(async (field) => {
       const value = updatedIndexes[field as keyof T];
-      if (value && typeof value === 'string') {
+      if (value && typeof value === "string") {
         for (let attempt = 0; attempt < retries; attempt++) {
-          const uniqueValue = this.generateUniqueValue(value, attempt)  as T[keyof T];
+          const uniqueValue = this.generateUniqueValue(value, attempt) as T[keyof T];
 
           updatedIndexes[field as keyof T] = uniqueValue;
 
           const existingItem = await this.model.findOne(updatedIndexes);
-          
+
           if (!existingItem) {
             return { field, value: uniqueValue };
           }
         }
-        const error = new Error(`Could not generate unique value for field ${String(field)} after ${retries} attempts`);
-        error.name = "MAX_UNIQUE_VALUE_GENERATION_ERROR"
+        const error = new Error(
+          `Could not generate unique value for field ${String(field)} after ${retries} attempts`
+        );
+        error.name = "MAX_UNIQUE_VALUE_GENERATION_ERROR";
         throw error;
       }
       return { field, value };
     });
-    
+
     const uniqueFields = await Promise.all(uniqueFieldPromises);
-      
+
     uniqueFields.forEach(({ field, value }) => {
       if (value !== undefined) {
         updatedFields[field as keyof T] = value;
       }
     });
-    
+
     return (await this.model.create(updatedFields)).toObject();
-    
   }
-  
 
   async upsert(
     filter: Partial<Fields<T>>,
@@ -286,10 +289,12 @@ export class Repository<T> {
 
   async updateUnique(
     indexes: {
-      [K in keyof T]?: T[K] | {
-        value?: T[K],
-        forceUnique?: boolean
-      }
+      [K in keyof T]?:
+        | T[K]
+        | {
+            value?: T[K];
+            forceUnique?: boolean;
+          };
     } & { _id: string | mongoose.ObjectId },
     filter: Partial<T> | { _id: string | mongoose.ObjectId },
     fields: Partial<T>,
@@ -297,7 +302,6 @@ export class Repository<T> {
       returning?: boolean;
       runValidators?: boolean;
     } = {}
-    
   ) {
     const { returning = true, runValidators = false } = options;
 
@@ -308,77 +312,81 @@ export class Repository<T> {
         if (typeof value === "object" && value !== null && "value" in value) {
           return [key, value.value];
         }
-        return [key, value]
+        return [key, value];
       })
     );
 
-    const forceUniqueFields = Object
-      .entries(indexesWithoutId)
+    const forceUniqueFields = Object.entries(indexesWithoutId)
       .map(([key, value]) => {
-        if (typeof value === "object" && value !== null && "forceUnique" in value && value.forceUnique) {
+        if (
+          typeof value === "object" &&
+          value !== null &&
+          "forceUnique" in value &&
+          value.forceUnique
+        ) {
           return key;
         }
       })
       .filter((key) => key !== undefined);
 
-    
     if (!_id) throw new Error("_id must be provided");
-    const objectId = typeof _id === 'string' ? castToObjectId(_id) : _id;
+    const objectId = typeof _id === "string" ? castToObjectId(_id) : _id;
 
-    const parsedIndexes = { _id: { $ne: objectId }, ...normalizedIndexes }
-    
+    const parsedIndexes = { _id: { $ne: objectId }, ...normalizedIndexes };
+
     const item = await this.model.findOne(parsedIndexes);
 
-    
     if (!item) {
       const { set, unset } = this.getSetAndUnsetFields(fields);
 
       return await this.model
-      .findOneAndUpdate(
-        filter,
-        { $set: set, $unset: unset },
-        {
-          new: returning,
-          runValidators
-        }
-      )
-      .exec();
+        .findOneAndUpdate(
+          filter,
+          { $set: set, $unset: unset },
+          {
+            new: returning,
+            runValidators
+          }
+        )
+        .exec();
     }
 
     if (!forceUniqueFields.length) {
       const error = new Error("One or more duplicate fields found");
-      error.name = "DUPLICATE_FIELD_ERROR"
+      error.name = "DUPLICATE_FIELD_ERROR";
       throw error;
     }
 
     const retries = UNIQUE_VALUE_GENERATION_RETRIES;
     const updatedFields = { ...fields };
-    const updatedIndexes = { ...parsedIndexes }
-    
+    const updatedIndexes = { ...parsedIndexes };
+
     const uniqueFieldPromises = forceUniqueFields.map(async (field) => {
       //@ts-expect-error dynamic key check
       const value = updatedIndexes[field];
-      if (value && typeof value === 'string') {
+      if (value && typeof value === "string") {
         for (let attempt = 0; attempt < retries; attempt++) {
-          const uniqueValue = this.generateUniqueValue(value, attempt)  as T[keyof T];
+          const uniqueValue = this.generateUniqueValue(value, attempt) as T[keyof T];
           //@ts-expect-error dynamic key check
           updatedIndexes[field] = uniqueValue;
 
           const existingItem = await this.model.findOne(updatedIndexes);
-          
+
           if (!existingItem) {
             return { field, value: uniqueValue };
           }
         }
-        const error = new Error(`Could not generate unique value for field ${String(field)} after ${retries} attempts`);
-        error.name = "MAX_UNIQUE_VALUE_GENERATION_ERROR"
+        const error = new Error(
+          `Could not generate unique value for field ${String(field)} after ${retries} attempts`
+        );
+        error.name = "MAX_UNIQUE_VALUE_GENERATION_ERROR";
         throw error;
       }
       return { field, value };
     });
-    
+
     const uniqueFields = await Promise.all(uniqueFieldPromises);
-      
+
     uniqueFields.forEach(({ field, value }) => {
       if (value !== undefined) {
         //@ts-expect-error dynamic key check
@@ -439,7 +447,7 @@ export class Repository<T> {
     const { where, select, include, exclude, populate, limit, skip, sort, filters } = options;
 
     if (where) {
-      query.where(where)
+      query.where(where);
     }
     // Handle select/exclude
     if (select && exclude) {
@@ -534,7 +542,7 @@ export class Repository<T> {
   }
 
   protected generateUniqueValue(originalValue: string, attempt: number): string {
-    return `${originalValue}(${attempt + 1})`
+    return `${originalValue}(${attempt + 1})`;
     /* if (attempt === 0) {
       return `${originalValue}_${Date.now()}`;
     }

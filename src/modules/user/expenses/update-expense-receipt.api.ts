@@ -32,7 +32,7 @@ export default api(
   {
     group: "/users/me",
     path: "/expenses/:expense_id/receipt",
-    method: "post"
+    method: "put"
   },
   defineHandler(async (req) => {
     const { expense_id } = req.params;

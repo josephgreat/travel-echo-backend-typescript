@@ -59,7 +59,7 @@ export default api(
   {
     group: "/users/me",
     path: "/expenses/:expense_id",
-    method: "post",
+    method: "put",
     middleware: defineValidator("body", Schema)
   },
   defineHandler(async (req) => {

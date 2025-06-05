@@ -49,7 +49,7 @@ export default api(
   {
     group: "/users/me",
     path: "/budgets/:budget_id",
-    method: "post",
+    method: "put",
     middleware: defineValidator("body", Schema)
   },
   defineHandler(async (req) => {

@@ -1,63 +1,43 @@
 import { CloudinaryImage } from "#src/db/models/models";
-import { expenseRepository } from "#src/db/repositories/expense.repository";
+import { passportRepository } from "#src/db/repositories/passport.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
-import { MAX_EXPENSE_RECEIPT_IMAGE_SIZE } from "#src/utils/constants";
+import { CLOUDINARY_PASSPORT_IMAGES_FOLDER, MAX_PASSPORT_IMAGE_SIZE, PASSPORT_IMAGE_PUBLIC_ID_PREFIX } from "#src/utils/constants";
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
 
-/**
- * @api {put} /users/me/expenses/:expense_id/receipt
- * @desc Uploads or updates the expense reveipt
- * @domain {User: Expenses}
- * @use {Auth}
- * @par {expense_id} @path The expense ID
- * @body {FormData} Form Data
- * @res {json}
- * {
- *  "success": true,
- *  "receipt": {
- *    "url": "https://res.cloudinary.com/...IMG_PRO_68122116ecccbf17300a8829.png",
- *    "name": "IMG_EXP_RECEIPT_68122116ecccbf17300a8829",
- *    "publicId": "IMG_EXP_RECEIPT_68122116ecccbf17300a8829",
- *    "assetId": "63545234234344",
- *    "format": "jpg",
- *    "bytes": 67541
- *   }
- * }
- */
 export default api(
   {
     group: "/users/me",
-    path: "/expenses/:expense_id/receipt",
-    method: "put"
+    path: "/passport/image",
+    method: "patch"
   },
   defineHandler(async (req) => {
-    const { expense_id } = req.params;
+    const userId = req.user!.id;
 
-    const expense = await expenseRepository.findById(expense_id);
-
-    if (!expense) {
-      throw HttpException.notFound("Expense not found");
+    const passport = await passportRepository.findOne({ user: userId });
+    
+    if (!passport) {
+      throw HttpException.notFound("Passport data not found");
     }
 
     const uploader = new AsyncBusboy({
       headers: req.headers,
       limits: {
         files: 1,
-        fileSize: MAX_EXPENSE_RECEIPT_IMAGE_SIZE
+        fileSize: MAX_PASSPORT_IMAGE_SIZE
       }
     });
 
     uploader.handler(async (name, file) => {
-      const imagePublicId = `IMG_EXP_RECEIPT_${expense_id}_${randomString(16, "numeric")}`;
-
+      const imagePublicId = `${PASSPORT_IMAGE_PUBLIC_ID_PREFIX}${passport._id}_${randomString(16, "numeric")}`;
+      
       return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
-            asset_folder: `EXPENSE_RECEIPTS/${expense_id}`,
+            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id}`,
             public_id: imagePublicId,
             display_name: imagePublicId,
             unique_filename: true
@@ -85,23 +65,46 @@ export default api(
     });
 
     const { error, data } = await uploader.upload<CloudinaryImage>(req);
-
+    
     if (!data || !data[0].data || error) {
       throw HttpException.badRequest(error?.message || "Upload failed");
     }
-
-    if (expense.receipt) {
-      await cloudinary.v2.uploader.destroy(expense.receipt.publicId, { invalidate: true });
+    
+    if (passport.image) {
+      await cloudinary.v2.uploader.destroy(passport.image.publicId, { invalidate: true });
     }
 
-    const updatedExpense = await expenseRepository.updateOne(expense_id, { receipt: data[0].data });
+    const updatedPassport = await passportRepository.updateOne(passport._id, { image: data[0].data });
 
-    if (!updatedExpense) {
-      throw HttpException.internal("Failed to update expense: Expense not found");
+    if (!updatedPassport) {
+      throw HttpException.internal(
+        "Failed to update passport image: Passport data not found"
+      );
     }
 
     return {
-      receipt: updatedExpense.receipt
+      image: updatedPassport.image
     };
   })
 );
+
+
+/**
+ * @api {put} /users/me/passport/image
+ * @desc Uploads the passport image
+ * @domain {User: Passport}
+ * @use {Auth}
+ * @body {FormData} Form Data
+ * @res {json}
+ * {
+ *  "success": true,
+ *  "image": {
+ *    "url": "https://res.cloudinary.com/...IMG_PASS_68122116ecccbf17300a8829.png",
+ *    "name": "IMG_PASS_68122116ecccbf17300a8829",
+ *    "publicId": "IMG_PASS_68122116ecccbf17300a8829",
+ *    "assetId": "63545234234344",
+ *    "format": "jpg",
+ *    "bytes": 67541
+ *   }
+ * }
+ */

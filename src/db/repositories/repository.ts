@@ -140,12 +140,7 @@ export class Repository<T> {
 
   async createUnique(
     indexes: {
-      [K in keyof T]?:
-        | T[K]
-        | {
-            value?: T[K];
-            forceUnique?: boolean;
-          };
+      [K in keyof T]?: | T[K] | { value?: T[K]; forceUnique?: boolean; };
     },
     fields: Partial<T>
   ) {

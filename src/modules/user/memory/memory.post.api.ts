@@ -58,12 +58,17 @@ export default api(
   },
   defineHandler(async (req) => {
     const { id } = req.user!;
+
     const data = req.validatedBody as z.infer<typeof ZodMemorySchema>;
+
     const memoryWithExistingTitle = await memoryRepository.findOne({ user: id, title: data.title });
+
     if (memoryWithExistingTitle) {
       throw HttpException.badRequest("A memory with this title already exists");
     }
+
     const memory = await memoryRepository.create({ user: id, ...data });
+    
     return { memory };
   })
 );

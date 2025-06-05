@@ -27,6 +27,29 @@ const Schema = z.object(
   { message: "No request body provided" }
 );
 
+export default api(
+  {
+    group: "/users/me",
+    path: "/budgets",
+    method: "post",
+    middleware: defineValidator("body", Schema)
+  },
+  defineHandler(async (req) => {
+    const data = req.body as z.infer<typeof Schema>;
+    const { id } = req.user!;
+
+    const budget = await budgetRepository.create({
+      user: id,
+      ...data
+    });
+
+    return {
+      budget
+    };
+  })
+);
+
+
 /**
  * @api {post} /users/me/budgets
  * @desc Creates a new budget
@@ -51,24 +74,3 @@ const Schema = z.object(
  * }
  */
 
-export default api(
-  {
-    group: "/users/me",
-    path: "/budgets",
-    method: "post",
-    middleware: defineValidator("body", Schema)
-  },
-  defineHandler(async (req) => {
-    const data = req.body as z.infer<typeof Schema>;
-    const { id } = req.user!;
-
-    const budget = await budgetRepository.create({
-      user: id,
-      ...data
-    });
-
-    return {
-      budget
-    };
-  })
-);

@@ -90,7 +90,9 @@ function main() {
   const flags = args.slice(1);
 
   const options = {
-    force: flags.includes("f") || flags.includes("force")
+    force: flags.includes("%f"),
+    createRepo: flags.includes("%r"),
+    createRoutes: flags.includes("%r")
   };
 
   createModelTemplate(modelName, options);

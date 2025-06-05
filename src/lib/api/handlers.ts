@@ -1,8 +1,9 @@
 import type { Request, Response, NextFunction, RequestHandler } from "express";
 import { HttpException, HttpResponse } from "./http";
 import { z, ZodError } from "zod";
+import Stream from "node:stream";
 
-export type DefineHandlerFunction = <T>(
+export type DefineHandlerFunction = <T extends HandlerResult>(
   fn: (req: Request, res: Response, next: NextFunction) => void | Promise<void> | T | Promise<T>
 ) => RequestHandler;
 /**
@@ -18,7 +19,20 @@ export type DefineHandlerFunction = <T>(
  * @returns An Express middleware function that wraps the handler.
  */
 
-export const defineHandler: DefineHandlerFunction = <T>(
+export type HandlerResult =
+  | void
+  | null
+  | string
+  | number
+  | boolean
+  | Date
+  | Buffer
+  | object
+  | Stream.Readable
+  | HttpException
+  | HttpResponse;
+
+export const defineHandler: DefineHandlerFunction = <T extends HandlerResult>(
   fn: (req: Request, res: Response, next: NextFunction) => T | Promise<T>
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -27,29 +41,48 @@ export const defineHandler: DefineHandlerFunction = <T>(
 
       if (res.headersSent) return;
 
+      if (result instanceof HttpResponse) {
+        result.send(res);
+        return;
+      }
+
       if (result instanceof HttpException) {
         next(result);
         return;
       }
 
+      if (result instanceof Stream.Readable) {
+        result.pipe(res);
+        return;
+      }
+
       if (result === undefined || result === null) {
         res.status(204).send();
-      } else if (
+        return;
+      }
+
+      const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 200;
+      
+      if (
         typeof result === "string" ||
         typeof result === "number" ||
-        typeof result === "boolean"
+        typeof result === "boolean" ||
+        result instanceof Date ||
+        result instanceof Buffer
       ) {
-        res.status(200).send(result);
-      } else if (result instanceof HttpResponse) {
-        result.send(res);
-      } else {
-        try {
-          res.status(200).json({ success: true, statusCode: res.status, ...result });
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (error) {
-          res.status(200).send(String(result));
-        }
+        res.status(statusCode).send(result);
+        return;
       }
+
+      const success = statusCode >= 200 && statusCode < 300;
+
+      try {
+        res.status(statusCode).json({ success, statusCode, ...result });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        res.status(statusCode).send(result);
+      }
+
     } catch (error) {
       next(error);
     }

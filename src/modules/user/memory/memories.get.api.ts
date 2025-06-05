@@ -2,7 +2,34 @@ import { memoryRepository } from "#src/db/repositories/memory.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { GET_REQUEST_DATA_LIMIT } from "#src/utils/constants";
-import parseSearchQueries from "../services/parse-search-queries";
+import parseSearchQueries from "./services/parse-search-queries";
+
+export default api(
+  { group: "/users/me", path: "/memories", method: "get" },
+  defineHandler(async (req) => {
+    const { id } = req.user!;
+
+    const { search, title, description, location, tag } = parseSearchQueries(req);
+
+    const { where, sort, select, limit = GET_REQUEST_DATA_LIMIT, skip = 0 } = req.parsedQuery || {};
+
+    const memories = await memoryRepository.findMemoryByUserId(id, {
+      where,
+      sort,
+      select,
+      limit,
+      skip,
+      search,
+      title,
+      description,
+      location,
+      tag
+    });
+
+    return { memories };
+  })
+);
+
 
 /**
  * @api {get} /users/me/memories
@@ -48,28 +75,3 @@ import parseSearchQueries from "../services/parse-search-queries";
  * @par {description?} @query Specific search by description e.g description=<value>
  * @use {Query}
  */
-export default api(
-  { group: "/users/me", path: "/memories", method: "get" },
-  defineHandler(async (req) => {
-    const { id } = req.user!;
-
-    const { search, title, description, location, tag } = parseSearchQueries(req);
-
-    const { where, sort, select, limit = GET_REQUEST_DATA_LIMIT, skip = 0 } = req.parsedQuery || {};
-
-    const memories = await memoryRepository.findMemoryByUserId(id, {
-      where,
-      sort,
-      select,
-      limit,
-      skip,
-      search,
-      title,
-      description,
-      location,
-      tag
-    });
-
-    return { memories };
-  })
-);

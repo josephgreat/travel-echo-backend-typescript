@@ -77,7 +77,7 @@ export class HttpException extends Error {
     }
   }
 
-  static badRequest(message: string, data?: Record<string, unknown>) {
+  static badRequest(message = "Bad request", data?: Record<string, unknown>) {
     return new HttpException(400, message, { data, errorCode: "BAD_REQUEST" });
   }
 

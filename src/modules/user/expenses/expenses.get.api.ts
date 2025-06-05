@@ -32,7 +32,7 @@ import { z } from "zod";
  * @use {Query}
  */
 
-export const getAllExpenses =  api(
+export const getAllExpenses = api(
   {
     group: "/users/me",
     path: "/expenses",
@@ -51,7 +51,6 @@ export const getAllExpenses =  api(
     return { expenses };
   })
 );
-
 
 /**
  * @api {get} /users/me/expenses/:expense_id

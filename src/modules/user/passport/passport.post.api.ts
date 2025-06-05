@@ -19,7 +19,7 @@ export default api(
 
     return {
       passport
-    }
+    };
   })
 );
 

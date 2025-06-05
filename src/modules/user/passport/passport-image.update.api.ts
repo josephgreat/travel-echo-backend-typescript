@@ -4,7 +4,11 @@ import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
-import { CLOUDINARY_PASSPORT_IMAGES_FOLDER, MAX_PASSPORT_IMAGE_SIZE, PASSPORT_IMAGE_PUBLIC_ID_PREFIX } from "#src/utils/constants";
+import {
+  CLOUDINARY_PASSPORT_IMAGES_FOLDER,
+  MAX_PASSPORT_IMAGE_SIZE,
+  PASSPORT_IMAGE_PUBLIC_ID_PREFIX
+} from "#src/utils/constants";
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
 
@@ -18,7 +22,7 @@ export default api(
     const userId = req.user!.id;
 
     const passport = await passportRepository.findOne({ user: userId });
-    
+
     if (!passport) {
       throw HttpException.notFound("Passport data not found");
     }
@@ -32,12 +36,14 @@ export default api(
     });
 
     uploader.handler(async (name, file) => {
-      const imagePublicId = `${PASSPORT_IMAGE_PUBLIC_ID_PREFIX}${passport._id}_${randomString(16, "numeric")}`;
-      
+      const imagePublicId = PASSPORT_IMAGE_PUBLIC_ID_PREFIX
+        .concat(passport._id.toString())
+        .concat(`_${randomString(16, "numeric")}`);
+
       return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
-            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id}`,
+            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`,
             public_id: imagePublicId,
             display_name: imagePublicId,
             unique_filename: true
@@ -65,21 +71,21 @@ export default api(
     });
 
     const { error, data } = await uploader.upload<CloudinaryImage>(req);
-    
+
     if (!data || !data[0].data || error) {
       throw HttpException.badRequest(error?.message || "Upload failed");
     }
-    
+
     if (passport.image) {
       await cloudinary.v2.uploader.destroy(passport.image.publicId, { invalidate: true });
     }
 
-    const updatedPassport = await passportRepository.updateOne(passport._id, { image: data[0].data });
+    const updatedPassport = await passportRepository.updateOne(passport._id, {
+      image: data[0].data
+    });
 
     if (!updatedPassport) {
-      throw HttpException.internal(
-        "Failed to update passport image: Passport data not found"
-      );
+      throw HttpException.internal("Failed to update passport image: Passport data not found");
     }
 
     return {
@@ -87,7 +93,6 @@ export default api(
     };
   })
 );
-
 
 /**
  * @api {put} /users/me/passport/image

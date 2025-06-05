@@ -33,46 +33,53 @@ export class Passport {
   public nationality!: string;
 
   @prop({ required: true })
-  public issueDate!: Date
+  public issueDate!: Date;
 
   @prop({ required: true })
-  public expiryDate!: Date
+  public expiryDate!: Date;
 
   @prop()
-  public image?: CloudinaryImage | null;
+  public image?: CloudinaryImage;
 
   @prop()
-  public placeOfIssue?: string | null;
+  public placeOfIssue?: string;
 }
- 
+
 export const PassportModel = getModelForClass(Passport);
 
-export const PassportZodSchema = z.object({
-  user: z
-    .string({ message: "User ID is required" })
-    .refine((value) => mongoose.isValidObjectId(value), {
-      message: "Invalid user ID"
-    })
-    .transform((value) => new mongoose.Types.ObjectId(value)),
-  passportNumber: z
-    .string({ message: "Passport number is required" })
-    .min(MIN_PASSPORT_NUMBER_LENGTH, { message: "Passport number is too short" }),
-  passportType: z
-    .enum(
+export const PassportZodSchema = z.object(
+  {
+    user: z
+      .string({ message: "User ID is required" })
+      .refine((value) => mongoose.isValidObjectId(value), {
+        message: "Invalid user ID"
+      })
+      .transform((value) => new mongoose.Types.ObjectId(value)),
+    passportNumber: z
+      .string({ message: "Passport number is required" })
+      .min(MIN_PASSPORT_NUMBER_LENGTH, { message: "Passport number is too short" }),
+    passportType: z.enum(
       [
         PassportType.Regular,
-        PassportType.Official, 
-        PassportType.Diplomatic, 
-        PassportType.Service, 
+        PassportType.Official,
+        PassportType.Diplomatic,
+        PassportType.Service,
         PassportType.Emergency
       ],
       { message: "Passport type is required" }
     ),
-  fullName: z.string({ message: "Full name is required" }),
-  nationality: z.string({ message: "Nationality is required" }),
-  issueDate: z.coerce.date({ message: "Issue date is not a valid date" }),
-  expiryDate: z.coerce.date({ message: "Expiry date is not a valid date" }),
-  placeOfIssue: z.string({ message: "Place of issue is required" }).nullish()
-});
+    fullName: z.string({ message: "Full name is required" }),
+    nationality: z.string({ message: "Nationality is required" }),
+    issueDate: z.coerce.date({ message: "Issue date is not a valid date" }),
+    expiryDate: z.coerce.date({ message: "Expiry date is not a valid date" }),
+    placeOfIssue: z
+      .string({ message: "Place of issue is required" })
+      .nullish()
+      .transform((val) => val || undefined)
+  },
+  {
+    message: "No passport data provided"
+  }
+);
 
 export type PassportZodType = z.infer<typeof PassportZodSchema>;

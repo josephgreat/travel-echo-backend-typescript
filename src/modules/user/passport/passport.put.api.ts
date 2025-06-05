@@ -18,10 +18,7 @@ export default api(
 
     data.user = castToObjectId(userId);
 
-    const passport = await passportRepository.updateOne(
-      { user: userId },
-      data
-    );
+    const passport = await passportRepository.updateOne({ user: userId }, data);
 
     if (!passport) {
       throw HttpException.notFound("Passport data not found");
@@ -29,9 +26,9 @@ export default api(
 
     return {
       passport
-    }
+    };
   })
-)
+);
 
 /**
  * @api {put} /users/me/passport
@@ -40,14 +37,14 @@ export default api(
  * @use {ContentAuth}
  * @body {json}
  * {
- *  "user": "string";
-    "passportNumber": "string";
-    "passportType": "PassportType";
-    "fullName": "string";
-    "nationality": "string";
-    "issueDate": "Date";
-    "expiryDate": "Date";
-    "placeOfIssue?": "string | null | undefined";
+ *  "user": "string",
+    "passportNumber": "string",
+    "passportType": "PassportType",
+    "fullName": "string",
+    "nationality": "string",
+    "issueDate": "Date",
+    "expiryDate": "Date",
+    "placeOfIssue?": "string | null | undefined"
  * }
  * @res {json}
  * {  

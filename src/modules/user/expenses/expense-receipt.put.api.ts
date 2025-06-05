@@ -4,14 +4,13 @@ import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
-import { 
-  CLOUDINARY_EXPENSE_RECEIPTS_FOLDER, 
-  EXPENSE_RECEIPT_PUBLIC_ID_PREFIX, 
-  MAX_EXPENSE_RECEIPT_IMAGE_SIZE 
+import {
+  CLOUDINARY_BUDGET_FOLDER,
+  EXPENSE_RECEIPT_PUBLIC_ID_PREFIX,
+  MAX_EXPENSE_RECEIPT_IMAGE_SIZE
 } from "#src/utils/constants";
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
-
 
 export default api(
   {
@@ -42,7 +41,7 @@ export default api(
       return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
-            asset_folder: `${CLOUDINARY_EXPENSE_RECEIPTS_FOLDER}/${expense_id}`,
+            asset_folder: `${CLOUDINARY_BUDGET_FOLDER}/${expense.budget.toString()}`,
             public_id: imagePublicId,
             display_name: imagePublicId,
             unique_filename: true

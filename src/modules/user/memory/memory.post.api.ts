@@ -68,7 +68,7 @@ export default api(
     }
 
     const memory = await memoryRepository.create({ user: id, ...data });
-    
+
     return { memory };
   })
 );

@@ -62,7 +62,7 @@ export const defineHandler: DefineHandlerFunction = <T extends HandlerResult>(
       }
 
       const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 200;
-      
+
       if (
         typeof result === "string" ||
         typeof result === "number" ||
@@ -82,7 +82,6 @@ export const defineHandler: DefineHandlerFunction = <T extends HandlerResult>(
       } catch (error) {
         res.status(statusCode).send(result);
       }
-
     } catch (error) {
       next(error);
     }

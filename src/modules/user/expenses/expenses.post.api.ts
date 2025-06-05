@@ -41,22 +41,14 @@ const Schema = z.object(
  * @domain {User: Expenses}
  * @use {ContentAuth}
  * @body {json}
- * {
- *  "budget": "string"
- *  "trip": "string | optiional",
- *  "title": "string",
- *  "category": "string",
- *  "plannedAmount": "number | optional",
- *  "actualAmount": "number",
- *  "notes": "string | optional"
- * }
+ * { ... }
  * @res {json}
  * {
  *   "success": true,
- *   "budget": {
+ *   "expense": {
  *     "_id": "string",
  *     "user": "string",
- *     "budget": "string"
+ *     "budget": "string",
  *     "trip": "string | optiional",
  *     "title": "string",
  *     "category": "string",
@@ -77,7 +69,7 @@ export default api(
     middleware: defineValidator("body", Schema)
   },
   defineHandler(async (req) => {
-    const data = req.body as z.infer<typeof Schema>;
+    const data = req.validatedBody as z.infer<typeof Schema>;
     const { id } = req.user!;
 
     try {

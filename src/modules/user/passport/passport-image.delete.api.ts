@@ -3,7 +3,7 @@ import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import cloudinary from "cloudinary";
-import { CLOUDINARY_PASSPORT_IMAGES_FOLDER } from '#src/utils/constants';
+import { CLOUDINARY_PASSPORT_IMAGES_FOLDER } from "#src/utils/constants";
 
 /**
  * @api {delete} /users/me/passport/image
@@ -36,7 +36,7 @@ export default api(
     try {
       await cloudinary.v2.uploader.destroy(image.publicId, { invalidate: true });
       await Promise.all([
-        cloudinary.v2.api.delete_folder(`${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id}`),
+        cloudinary.v2.api.delete_folder(`${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`),
         passportRepository.updateOne({ _id: passport._id, user: userId }, { image: undefined })
       ]);
 

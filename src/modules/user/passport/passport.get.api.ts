@@ -23,7 +23,7 @@ export default api(
     return {
       success: true,
       passport
-    }
+    };
   })
 );
 

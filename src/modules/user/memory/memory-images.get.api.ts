@@ -23,10 +23,7 @@ export default api(
 
     const { skip, limit, sort } = req.parsedQuery || {};
 
-    const cappedLimit = Math.min(
-      limit || 
-      GET_REQUEST_DATA_LIMIT, GET_REQUEST_DATA_LIMIT
-    );
+    const cappedLimit = Math.min(limit || GET_REQUEST_DATA_LIMIT, GET_REQUEST_DATA_LIMIT);
 
     const images = await memoryImageRepository.findMany(
       { memory: memory._id },

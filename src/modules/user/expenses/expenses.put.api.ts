@@ -63,7 +63,7 @@ export default api(
     middleware: defineValidator("body", Schema)
   },
   defineHandler(async (req) => {
-    const data = req.body as z.infer<typeof Schema>;
+    const data = req.validatedBody as z.infer<typeof Schema>;
     const { id } = req.user!;
     const { expense_id } = req.params;
 

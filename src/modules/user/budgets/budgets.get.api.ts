@@ -5,7 +5,6 @@ import { HttpException } from "#src/lib/api/http";
 import { isObjectIdOrHexString } from "mongoose";
 import { z } from "zod";
 
-
 export const getAllBudgets = api(
   {
     group: "/users/me",
@@ -51,7 +50,6 @@ export const getAllBudgets = api(
  * @par {where?} @query e.g where=budget,budget_id
  * @use {Query}
  */
-
 
 /**
  * Get single budget
@@ -111,4 +109,3 @@ export const getSingleBudget = api(
  * @par {where?} @query e.g. where=currency,USD
  * @par {select?} @query e.g. select=trip,plannedAmount
  */
-

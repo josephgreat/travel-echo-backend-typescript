@@ -34,6 +34,10 @@ export interface QueryFilterOptions<T> {
 export class Repository<T> {
   constructor(protected readonly model: ReturnModelType<new () => T>) {}
 
+  raw() {
+    return this.model;
+  }
+
   async findOne(fields: Partial<Fields<T>>, options?: RepositoryQueryOptions<T>) {
     let query = this.model.findOne(fields);
     query = this.applyQueryOptions(query, options);
@@ -140,7 +144,7 @@ export class Repository<T> {
 
   async createUnique(
     indexes: {
-      [K in keyof T]?: | T[K] | { value?: T[K]; forceUnique?: boolean; };
+      [K in keyof T]?: T[K] | { value?: T[K]; forceUnique?: boolean };
     },
     fields: Partial<T>
   ) {

@@ -14,14 +14,14 @@ export default api(
     const result = await passportRepository.deleteOne({ user: userId });
 
     if (result.deletedCount === 0) {
-      throw HttpException.notFound("Passport data not found")
+      throw HttpException.notFound("Passport data not found");
     }
-    
+
     return {
       message: "Passport data deleted successfully"
-    }
+    };
   })
-)
+);
 
 /**
  * @api {delete} /users/me/passport

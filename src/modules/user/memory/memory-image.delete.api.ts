@@ -2,7 +2,10 @@ import { memoryRepository } from "#src/db/repositories/memory.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
-import { CLOUDINARY_MEMORY_IMAGES_FOLDER, MAX_MEMORY_IMAGES_PER_DELETE } from "#src/utils/constants";
+import {
+  CLOUDINARY_MEMORY_IMAGES_FOLDER,
+  MAX_MEMORY_IMAGES_PER_DELETE
+} from "#src/utils/constants";
 import mongoose, { isValidObjectId } from "mongoose";
 import { z } from "zod";
 import deleteMemoryImages from "./services/delete-memory-images";
@@ -52,9 +55,7 @@ export default api(
       const { count } = await deleteMemoryImages(id, memory, "all");
       const newImageCount = Math.max((memory.imageCount || 0) - count, 0);
       await memoryRepository.updateOne(memory._id, { imageCount: newImageCount });
-      await cloudinary.v2.api.delete_folder(
-        `${CLOUDINARY_MEMORY_IMAGES_FOLDER}/${memory_id}`
-      );
+      await cloudinary.v2.api.delete_folder(`${CLOUDINARY_MEMORY_IMAGES_FOLDER}/${memory_id}`);
       return {
         success: true,
         message: "All images deleted successfully",

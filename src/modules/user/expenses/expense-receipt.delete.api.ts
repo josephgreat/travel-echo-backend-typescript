@@ -2,7 +2,7 @@ import { expenseRepository } from "#src/db/repositories/expense.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
-import { CLOUDINARY_EXPENSE_RECEIPTS_FOLDER } from "#src/utils/constants";
+import { CLOUDINARY_BUDGET_FOLDER } from "#src/utils/constants";
 import cloudinary from "cloudinary";
 
 /**
@@ -35,7 +35,9 @@ export default api(
 
     try {
       await cloudinary.v2.uploader.destroy(receipt.publicId, { invalidate: true });
-      await cloudinary.v2.api.delete_folder(`${CLOUDINARY_EXPENSE_RECEIPTS_FOLDER}/${expense_id}`);
+      await cloudinary.v2.api.delete_folder(
+        `${CLOUDINARY_BUDGET_FOLDER}/${expense.budget.toString()}`
+      );
       await expenseRepository.updateOne({ _id: expense_id, user: id }, { receipt: undefined });
       return {
         success: true,

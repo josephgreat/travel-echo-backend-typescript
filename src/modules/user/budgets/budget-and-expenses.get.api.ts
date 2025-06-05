@@ -6,31 +6,6 @@ import { castToObjectId } from "#src/utils/helpers";
 import { isObjectIdOrHexString } from "mongoose";
 import { z } from "zod";
 
-/**
- * @api {get} /users/me/budgets/:budget_id/expenses
- * @desc Gets the budget and all its expenses
- * @domain {User: Budgets}
- * @use {Auth}
- * @res {json}
- * {
- *   "success": true,
- *   "budget": {
- *      "_id": "string",
- *      "user": "string",
- *      "trip": "string",
- *      "plannedAmount": "number",
- *      "spentAmount": "number",
- *      "currency": "string | optional",
- *      "notes": "string | optional",
- *      "createdAt": "Date",
- *      "updatedAt": "Date",
- *      "expenses": [ {...}, {...} ]
- *    }
- * }
- * @par {populate?} @query e.g. populate=user
- * @par {select?} @query e.g. select=trip,plannedAmount
- */
-
 const Schema = z.object({
   budget_id: z
     .string({ message: "Budget ID is requuired" })
@@ -66,3 +41,28 @@ export default api(
     return { budget };
   })
 );
+
+/**
+ * @api {get} /users/me/budgets/:budget_id/expenses
+ * @desc Gets the budget and all its expenses
+ * @domain {User: Budgets}
+ * @use {Auth}
+ * @res {json}
+ * {
+ *   "success": true,
+ *   "budget": {
+ *      "_id": "string",
+ *      "user": "string",
+ *      "trip": "string",
+ *      "plannedAmount": "number",
+ *      "spentAmount": "number",
+ *      "currency": "string | optional",
+ *      "notes": "string | optional",
+ *      "createdAt": "Date",
+ *      "updatedAt": "Date",
+ *      "expenses": [ {...}, {...} ]
+ *    }
+ * }
+ * @par {populate?} @query e.g. populate=user
+ * @par {select?} @query e.g. select=trip,plannedAmount
+ */

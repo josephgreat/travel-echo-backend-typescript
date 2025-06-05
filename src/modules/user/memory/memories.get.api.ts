@@ -30,7 +30,6 @@ export default api(
   })
 );
 
-
 /**
  * @api {get} /users/me/memories
  * @desc Gets the memories of the user with 5 memory images each

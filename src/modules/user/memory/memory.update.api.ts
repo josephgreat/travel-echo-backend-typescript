@@ -3,39 +3,8 @@ import { api } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
-import { ZodMemorySchema } from "./create-memory.api";
+import { ZodMemorySchema } from "./memory.post.api";
 
-/**
- * @api {put} /users/me/memories/:memory_id
- * @par {memory_id} @path The memory id
- * @desc Updates a memory
- * @domain {User: Memories}
- * @use {ContentAuth}
- * @body {json}
- * {
- *  "title": "string | optional",
- *  "description": "string | optional",
- *  "location": "string | optional",
- *  "date": "date | optional",
- *  "tags": "array of strings | optional",
- *  "isPublic": "boolean | optional | default true"
- * }
- * @res {json}
- * {
- *  "success": true,
- *  "memory": {
- *    "_id": "65defc452caed3211ad24de4e",
- *    "title": "Hike to Mount Fuji",
- *    "description": "description of memory",
- *    "location": "Tokyo, Japan",
- *    "date": "2023-01-01",
- *    "tags": ["hiking", "nature"],
- *    "isPublic": true,
- *    "createdAt": "2023-01-01T00:00:00.000Z",
- *    "updatedAt": "2023-01-01T00:00:00.000Z"
- *  }
- * }
- */
 export default api(
   {
     group: "/users/me",
@@ -69,3 +38,35 @@ export default api(
     return { memory: updatedMemory };
   })
 );
+
+/**
+ * @api {put} /users/me/memories/:memory_id
+ * @par {memory_id} @path The memory id
+ * @desc Updates a memory
+ * @domain {User: Memories}
+ * @use {ContentAuth}
+ * @body {json}
+ * {
+ *  "title": "string | optional",
+ *  "description": "string | optional",
+ *  "location": "string | optional",
+ *  "date": "date | optional",
+ *  "tags": "array of strings | optional",
+ *  "isPublic": "boolean | optional | default true"
+ * }
+ * @res {json}
+ * {
+ *  "success": true,
+ *  "memory": {
+ *    "_id": "65defc452caed3211ad24de4e",
+ *    "title": "Hike to Mount Fuji",
+ *    "description": "description of memory",
+ *    "location": "Tokyo, Japan",
+ *    "date": "2023-01-01",
+ *    "tags": ["hiking", "nature"],
+ *    "isPublic": true,
+ *    "createdAt": "2023-01-01T00:00:00.000Z",
+ *    "updatedAt": "2023-01-01T00:00:00.000Z"
+ *  }
+ * }
+ */

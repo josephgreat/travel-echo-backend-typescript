@@ -2,26 +2,12 @@ import { expenseRepository } from "#src/db/repositories/expense.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
-import mongoose from "mongoose";
 import { z } from "zod";
 
 const Schema = z.object(
   {
-    budget: z
-      .string({ message: "Budget ID is required" })
-      .refine((val) => val === undefined || mongoose.isObjectIdOrHexString(val), {
-        message: "Invalid Budget ID"
-      })
-      .transform((val) => new mongoose.Types.ObjectId(val)),
-    trip: z
-      .string({ message: "Invalid Trip ID" })
-      .refine((val) => val === undefined || mongoose.isObjectIdOrHexString(val), {
-        message: "Invalid Trip ID"
-      })
-      .transform((val) => new mongoose.Types.ObjectId(val))
-      .optional(),
-    title: z.string({ message: "Title is required" }),
-    category: z.string({ message: "Category is required" }),
+    title: z.string({ message: "Title is required" }).optional(),
+    category: z.string({ message: "Category is required" }).optional(),
     plannedAmount: z
       .number({ message: "Planned amount is required" })
       .min(0, { message: "Planned amount cannot be negative" })
@@ -36,8 +22,8 @@ const Schema = z.object(
 );
 
 /**
- * @api {post} /users/me/expenses
- * @desc Creates a new expense
+ * @api {put} /users/me/expenses/:expense_id
+ * @desc Updates the expense with the provided expense id
  * @domain {User: Expenses}
  * @use {ContentAuth}
  * @body {json}
@@ -56,7 +42,7 @@ const Schema = z.object(
  *   "budget": {
  *     "_id": "string",
  *     "user": "string",
- *     "budget": "string"
+ *     "budget": "string",
  *     "trip": "string | optiional",
  *     "title": "string",
  *     "category": "string",
@@ -72,19 +58,26 @@ const Schema = z.object(
 export default api(
   {
     group: "/users/me",
-    path: "/expenses",
-    method: "post",
+    path: "/expenses/:expense_id",
+    method: "put",
     middleware: defineValidator("body", Schema)
   },
   defineHandler(async (req) => {
-    const data = req.body as z.infer<typeof Schema>;
+    const data = req.validatedBody as z.infer<typeof Schema>;
     const { id } = req.user!;
+    const { expense_id } = req.params;
 
     try {
-      const expense = await expenseRepository.createUnique(
-        { user: id, title: { value: data.title, forceUnique: true } },
-        { user: id, ...data }
+      const expense = await expenseRepository.updateUnique(
+        { _id: expense_id, user: id, title: { value: data.title, forceUnique: true } },
+        { _id: expense_id, user: id },
+        data,
+        { returning: true }
       );
+
+      if (!expense) {
+        throw HttpException.notFound("Expense not found");
+      }
 
       return {
         expense

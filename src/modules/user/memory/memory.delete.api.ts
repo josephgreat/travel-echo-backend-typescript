@@ -2,7 +2,7 @@ import { memoryRepository } from "#src/db/repositories/memory.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
-import deleteMemoryImages from "../services/delete-memory-images";
+import deleteMemoryImages from "./services/delete-memory-images";
 import cloudinary from "cloudinary";
 
 /**

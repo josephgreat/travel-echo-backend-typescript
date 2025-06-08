@@ -4,7 +4,7 @@ import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
-import { MAX_PROFILE_IMAGE_SIZE } from "#src/utils/constants";
+import { MAX_PROFILE_IMAGE_SIZE, PROFILE_IMAGE_PUBLIC_ID_PREFIX } from "#src/utils/constants";
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
 /**
@@ -44,7 +44,7 @@ export default api(
     });
 
     uploader.handler(async (name, file) => {
-      const imagePublicId = `IMG_PRO_${id.toString()}_${randomString(16, "numeric")}`;
+      const imagePublicId = `${PROFILE_IMAGE_PUBLIC_ID_PREFIX}${id.toString()}_${randomString(16, "numeric")}`;
 
       return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(

@@ -23,9 +23,6 @@ export class Trip {
 
   @prop()
   public endDate?: Date;
-
-  @prop({ type: () => [String] })
-  public arrayField!: string[];
 }
 
 export const TripModel = getModelForClass(Trip);

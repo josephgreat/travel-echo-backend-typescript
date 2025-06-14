@@ -19,6 +19,42 @@ export const ZodMemorySchema = z.object(
   { message: "No request body provided" }
 );
 
+export default api(
+  {
+    group: "/users/me",
+    path: "/memories",
+    method: "post",
+    middleware: defineValidator("body", ZodMemorySchema)
+  },
+  defineHandler(async (req) => {
+    const { id } = req.user!;
+
+    const data = req.validatedBody as z.infer<typeof ZodMemorySchema>;
+
+    try {
+      const memory = await memoryRepository.createUnique(
+        { user: id, title: { value: data.title, forceUnique: true } },
+        { user: id, ...data }
+      )
+
+      return {
+        memory
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        if (
+          error.name === "DUPLICATE_FIELD_ERROR" ||
+          error.name === "MAX_UNIQUE_VALUE_GENERATION_ERROR"
+        ) {
+          throw HttpException.badRequest("A memory with this title already exists.");
+        }
+      }
+      throw error;
+    }
+  })
+);
+
+
 /**
  * @api {post} /users/me/memories
  * @desc Creates a new memory
@@ -49,26 +85,3 @@ export const ZodMemorySchema = z.object(
  *  }
  * }
  */
-export default api(
-  {
-    group: "/users/me",
-    path: "/memories",
-    method: "post",
-    middleware: defineValidator("body", ZodMemorySchema)
-  },
-  defineHandler(async (req) => {
-    const { id } = req.user!;
-
-    const data = req.validatedBody as z.infer<typeof ZodMemorySchema>;
-
-    const memoryWithExistingTitle = await memoryRepository.findOne({ user: id, title: data.title });
-
-    if (memoryWithExistingTitle) {
-      throw HttpException.badRequest("A memory with this title already exists");
-    }
-
-    const memory = await memoryRepository.create({ user: id, ...data });
-
-    return { memory };
-  })
-);

@@ -18,7 +18,34 @@ export default api(
 
     const data = req.validatedBody as z.infer<typeof ZodMemorySchema>;
 
-    const memory = await memoryRepository.findOne({ _id: memory_id, user: id });
+    try {
+      const memory = await memoryRepository.updateUnique(
+        { _id: memory_id, user: id, title: { value: data.title, forceUnique: true } },
+        { _id: memory_id, user: id },
+        data,
+        { returning: true }
+      );
+
+      if (!memory) {
+        throw HttpException.notFound("Memory not found");
+      }
+
+      return {
+        memory
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        if (
+          error.name === "DUPLICATE_FIELD_ERROR" ||
+          error.name === "MAX_UNIQUE_VALUE_GENERATION_ERROR"
+        ) {
+          throw HttpException.badRequest("A memory with this title already exists.");
+        }
+      }
+      throw error;
+    }
+
+    /* const memory = await memoryRepository.findOne({ _id: memory_id, user: id });
 
     if (!memory) {
       throw HttpException.notFound("Memory not found");
@@ -35,7 +62,7 @@ export default api(
 
     const updatedMemory = await memoryRepository.updateOne(memory._id, data, { returning: true });
 
-    return { memory: updatedMemory };
+    return { memory: updatedMemory }; */
   })
 );
 

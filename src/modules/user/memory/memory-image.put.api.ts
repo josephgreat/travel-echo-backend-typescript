@@ -97,6 +97,12 @@ export default api(
       { returning: true }
     );
 
+    /* const updatedImage = await memoryImageRepository.updateUnique(
+      { _id: image_id, memory: image.memory, name: { value: name, forceUnique: true } },
+      { _id: image_id, memory: memory._id },
+      { name }
+    ) */
+
     return {
       success: true,
       message: "Image name updated successfully",

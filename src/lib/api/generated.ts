@@ -50,36 +50,6 @@ export const routes = [
   },
   {
     "group": "/users/me",
-    "path": "/users/me/budgets/:budget_id/expenses",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/budgets/:budget_id",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/budgets",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/budgets/:budget_id",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/budgets",
-    "method": "post"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/budgets/:budget_id",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
     "path": "/users/me/expenses/:expense_id/receipt",
     "method": "delete"
   },
@@ -125,32 +95,32 @@ export const routes = [
   },
   {
     "group": "/users/me",
-    "path": "/users/me/passport/image",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport/image",
-    "method": "patch"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport",
+    "path": "/users/me/budgets/:budget_id/expenses",
     "method": "get"
   },
   {
     "group": "/users/me",
-    "path": "/users/me/passport",
+    "path": "/users/me/budgets/:budget_id",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/budgets",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/budgets/:budget_id",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/budgets",
     "method": "post"
   },
   {
     "group": "/users/me",
-    "path": "/users/me/passport",
+    "path": "/users/me/budgets/:budget_id",
     "method": "put"
   },
   {
@@ -211,6 +181,36 @@ export const routes = [
   {
     "group": "/users/me",
     "path": "/users/me/profile",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport/image",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport/image",
+    "method": "patch"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
+    "method": "post"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
     "method": "put"
   }
 ] as const;

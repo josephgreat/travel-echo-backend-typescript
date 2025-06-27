@@ -13,7 +13,7 @@ export default api(
     const id = req.user!.id;
 
     const passports = await passportRepository.find({
-      user: id
+     where: { user: id }
     });
 
     if (!passports) {

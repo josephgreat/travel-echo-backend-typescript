@@ -12,8 +12,8 @@ export default api(
   defineHandler(async (req) => {
     const id = req.user!.id;
 
-    const passports = await passportRepository.find({
-     where: { user: id }
+    const passports = await passportRepository.findMany({
+      user: id 
     });
 
     if (!passports) {

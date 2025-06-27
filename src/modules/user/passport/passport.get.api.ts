@@ -16,7 +16,7 @@ export default api(
       user: id
     });
 
-    if (!passport) {
+    if (!passports) {
       throw HttpException.notFound("Passport data not found");
     }
 

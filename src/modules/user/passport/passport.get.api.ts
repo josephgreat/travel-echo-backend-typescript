@@ -12,7 +12,7 @@ export default api(
   defineHandler(async (req) => {
     const id = req.user!.id;
 
-    const passport = await passportRepository.findOne({
+    const passports = await passportRepository.find({
       user: id
     });
 
@@ -22,7 +22,7 @@ export default api(
 
     return {
       success: true,
-      passport
+      passports
     };
   })
 );

@@ -15,17 +15,17 @@ import cloudinary from "cloudinary";
 export default api(
   {
     group: "/users/me",
-    path: "/passport/image",
+    path: "/passport/:passportId/images",
     method: "patch"
   },
   defineHandler(async (req) => {
     // const userId = req.user!.id;
-    const passportId = req.query.passportId || req.body.passportId;
-    if (!passportId) {
-      throw HttpException.badRequest("passportId is required");
+    const { passportId } = req.params;
+    const passport = await passportRepository.findOne({ _id: passportId, user: userId });
+    
+    if (!passport) {
+      throw HttpException.notFound("Passport not found");
     }
-
-   const passport = await passportRepository.findById(passportId);
     
     if (!passport) {
       throw HttpException.notFound("Passport data not found");

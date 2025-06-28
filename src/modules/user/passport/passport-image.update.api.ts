@@ -19,7 +19,7 @@ export default api(
     method: "patch"
   },
   defineHandler(async (req) => {
-    // const userId = req.user!.id;
+    const userId = req.user!.id;
     const { passportId } = req.params;
     const passport = await passportRepository.findOne({ _id: passportId, user: userId });
     

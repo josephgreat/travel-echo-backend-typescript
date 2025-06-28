@@ -23,7 +23,7 @@ export class Passport {
   @prop({ required: true })
   public passportNumber!: string;
 
-  @prop({ enum: PassportType, required: true })
+  @prop({required: true })
   public passportType!: PassportType;
 
   @prop({ required: true })

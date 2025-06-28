@@ -39,7 +39,7 @@ export class Passport {
   public expiryDate!: Date;
 
   @prop({type: () => [CloudinaryImage], default: []})
-  public image!: CloudinaryImage[];
+  public images!: CloudinaryImage[];
 
   @prop()
   public placeOfIssue?: string;

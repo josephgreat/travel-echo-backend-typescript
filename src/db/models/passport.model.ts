@@ -24,7 +24,7 @@ export class Passport {
   public passportNumber!: string;
 
   @prop({required: true })
-  public passportType!: PassportType;
+  public passportType!: string;
 
   @prop({ required: true })
   public fullName!: string;

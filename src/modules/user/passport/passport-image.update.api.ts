@@ -19,10 +19,14 @@ export default api(
     method: "patch"
   },
   defineHandler(async (req) => {
-    const userId = req.user!.id;
+    // const userId = req.user!.id;
+    const passportId = req.query.passportId || req.body.passportId;
+    if (!passportId) {
+      throw HttpException.badRequest("passportId is required");
+    }
 
-    const passport = await passportRepository.findOne({ user: userId });
-
+   const passport = await passportRepository.findById(passportId);
+    
     if (!passport) {
       throw HttpException.notFound("Passport data not found");
     }
@@ -30,66 +34,72 @@ export default api(
     const uploader = new AsyncBusboy({
       headers: req.headers,
       limits: {
-        files: 1,
         fileSize: MAX_PASSPORT_IMAGE_SIZE
       }
     });
 
+     const uploadedImages: CloudinaryImage[] = [];
+
     uploader.handler(async (name, file) => {
       const imagePublicId = PASSPORT_IMAGE_PUBLIC_ID_PREFIX
-        .concat(passport._id.toString())
+        .concat(passportId)
         .concat(`_${randomString(16, "numeric")}`);
-
-      return new Promise((resolve, reject) => {
+    
+      const result = await new Promise<CloudinaryImage>((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
-            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`,
+            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passportId}`,
             public_id: imagePublicId,
             display_name: imagePublicId,
             unique_filename: true
           },
           (error, result) => {
             if (error) return reject(error);
-
-            if (result) {
-              resolve({
-                url: result.secure_url,
-                name: result.display_name,
-                publicId: result.public_id,
-                assetId: result.asset_id,
-                format: result.format,
-                bytes: result.bytes
-              });
-            } else {
-              reject(new Error("No result from Cloudinary"));
-            }
+            if (!result) return reject(new Error("No result from Cloudinary"));
+            resolve({
+              url: result.secure_url,
+              name: result.display_name,
+              publicId: result.public_id,
+              assetId: result.asset_id,
+              format: result.format,
+              bytes: result.bytes
+            });
           }
         );
-
         file.pipe(stream);
       });
+    
+      uploadedImages.push(result);
     });
 
-    const { error, data } = await uploader.upload<CloudinaryImage>(req);
 
-    if (!data || !data[0].data || error) {
+    const { error } = await uploader.upload(req);
+
+    if (error || uploadedImages.length === 0) {
       throw HttpException.badRequest(error?.message || "Upload failed");
     }
-
-    if (passport.image) {
-      await cloudinary.v2.uploader.destroy(passport.image.publicId, { invalidate: true });
+  
+    // 6️⃣ Delete existing images from Cloudinary
+    if (passport.images && passport.images.length > 0) {
+      for (const oldImage of passport.images) {
+        if (oldImage?.publicId) {
+          await cloudinary.v2.uploader.destroy(oldImage.publicId, { invalidate: true });
+        }
+      }
     }
-
+  
+    // 7️⃣ Replace images in DB
     const updatedPassport = await passportRepository.updateOne(passport._id, {
-      image: data[0].data
+      images: uploadedImages
     });
-
+  
     if (!updatedPassport) {
-      throw HttpException.internal("Failed to update passport image: Passport data not found");
+      throw HttpException.internal("Failed to update passport images");
     }
-
+  
+    // 8️⃣ Return result
     return {
-      image: updatedPassport.image
+      images: updatedPassport.images
     };
   })
 );

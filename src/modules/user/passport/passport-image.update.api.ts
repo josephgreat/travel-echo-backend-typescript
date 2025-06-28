@@ -16,7 +16,7 @@ export default api(
   {
     group: "/users/me",
     path: "/passport/:passportId/images",
-    method: "patch"
+    method: "put"
   },
   defineHandler(async (req) => {
     const userId = req.user!.id;
@@ -105,21 +105,21 @@ export default api(
 );
 
 /**
- * @api {put} /users/me/passport/image
- * @desc Uploads the passport image
+ * @api {put} /users/me/passport/:passportId/images
+ * @desc Upload multiple passport images (replaces old ones)
  * @domain {User: Passport}
  * @use {Auth}
- * @body {FormData} Form Data
+ * @body {FormData} Form Data (field: passportImages[])
  * @res {json}
  * {
  *  "success": true,
- *  "image": {
- *    "url": "https://res.cloudinary.com/...IMG_PASS_68122116ecccbf17300a8829.png",
- *    "name": "IMG_PASS_68122116ecccbf17300a8829",
- *    "publicId": "IMG_PASS_68122116ecccbf17300a8829",
- *    "assetId": "63545234234344",
- *    "format": "jpg",
- *    "bytes": 67541
- *   }
+ *  "images": [
+ *    {
+ *      "url": "...",
+ *      "name": "...",
+ *      "publicId": "...",
+ *      ...
+ *    }
+ *  ]
  * }
  */

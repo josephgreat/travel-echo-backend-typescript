@@ -1,4 +1,5 @@
 import { memoryRepository } from "#src/db/repositories/memory.repository";
+// import { milestoneRepository } from "#src/db/repositories/milestone.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
@@ -30,11 +31,19 @@ export default api(
       throw HttpException.notFound("Memory not found");
     }
 
+   /*  const milestone = await milestoneRepository.findOrCreate(
+      { user: id },
+      { user: id, totalMemories: 0, totalTrips: 0 }
+    ); */
+
     const { count } = await deleteMemoryImages(id, memory, "all");
 
     await Promise.all([
-      await memoryRepository.deleteOne(memory._id),
-      await cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`)
+      memoryRepository.deleteOne(memory._id),
+      cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`),
+      /* milestoneRepository.updateOne(milestone._id, {
+        totalMemories: Math.min(milestone.totalMemories - 1, 0)
+      }) */
     ]);
 
     return {

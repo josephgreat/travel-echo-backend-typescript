@@ -31,10 +31,6 @@ app.get("/doc", (req, res) => {
   const filePath = path.resolve("public/api.html");
   res.sendFile(filePath);
 });
-app.get("/test", (req, res) => {
-  const filePath = path.resolve("public/file.html");
-  res.sendFile(filePath);
-});
 (async function () {
   app.use(parseRequestQuery);
   await generateRoutes(app, routeConfig);

@@ -3,20 +3,20 @@ import { api } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
-import { ZodMemorySchema } from "./memory.post.api";
+import { MemoryZodSchema } from "#src/db/models/memory.model";
 
 export default api(
   {
     group: "/users/me",
     path: "/memories/:memory_id",
     method: "put",
-    middleware: defineValidator("body", ZodMemorySchema)
+    middleware: defineValidator("body", MemoryZodSchema)
   },
   defineHandler(async (req) => {
     const { id } = req.user!;
     const memory_id = req.params.memory_id.toString();
 
-    const data = req.validatedBody as z.infer<typeof ZodMemorySchema>;
+    const data = req.validatedBody as z.infer<typeof MemoryZodSchema>;
 
     try {
       const memory = await memoryRepository.updateUnique(

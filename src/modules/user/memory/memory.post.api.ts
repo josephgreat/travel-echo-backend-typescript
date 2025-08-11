@@ -1,44 +1,46 @@
+import { MemoryZodSchema } from "#src/db/models/memory.model";
 import { memoryRepository } from "#src/db/repositories/memory.repository";
+import { milestoneRepository } from "#src/db/repositories/milestone.repository";
 import { api } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
-
-export const ZodMemorySchema = z.object(
-  {
-    title: z.string({ message: "Title is required" }).min(3, { message: "Title is too short" }),
-    description: z.string({ message: "Invalid description provided" }).optional(),
-    location: z.string({ message: "Invalid location provided" }).optional(),
-    date: z
-      .string({ message: "Invalid date provided" })
-      .optional()
-      .transform((dob) => (dob ? new Date(dob) : undefined)),
-    tags: z.array(z.string({ message: "Invalid tag provided" })).optional(),
-    isPublic: z.boolean({ message: "Public status should be true or false" }).optional()
-  },
-  { message: "No request body provided" }
-);
+import { awardBadgeIfEligible } from "../badges/services/award-badge-if-eligible";
+import { BadgeCategory } from "#src/db/models/badge.model";
 
 export default api(
   {
     group: "/users/me",
     path: "/memories",
     method: "post",
-    middleware: defineValidator("body", ZodMemorySchema)
+    middleware: defineValidator("body", MemoryZodSchema)
   },
   defineHandler(async (req) => {
     const { id } = req.user!;
 
-    const data = req.validatedBody as z.infer<typeof ZodMemorySchema>;
+    const data = req.validatedBody as z.infer<typeof MemoryZodSchema>;
 
     try {
-      const memory = await memoryRepository.createUnique(
-        { user: id, title: { value: data.title, forceUnique: true } },
-        { user: id, ...data }
-      )
+      const milestone = await milestoneRepository.findOrCreate(
+        { user: id },
+        { user: id, totalMemories: 0, totalTrips: 0 }
+      );
+
+      const [memory] = await Promise.all([
+        memoryRepository.createUnique(
+          { user: id, title: { value: data.title, forceUnique: true } },
+          { user: id, ...data }
+        ),
+
+        milestoneRepository.updateOne(milestone._id, { totalMemories: milestone.totalMemories + 1 })
+      ]);
+
+      const { hasEarnedNewBadge, badge } = await awardBadgeIfEligible(id, BadgeCategory.Memory);
 
       return {
-        memory
+        memory,
+        hasEarnedNewBadge,
+        badge
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -53,7 +55,6 @@ export default api(
     }
   })
 );
-
 
 /**
  * @api {post} /users/me/memories
@@ -72,6 +73,8 @@ export default api(
  * @res {json}
  * {
  *  "success": true,
+ *  "hasEarnedNewBadge": "boolean",
+ *  "badge": "badge info | null",
  *  "memory": {
  *    "_id": "65defc452caed3211ad24de4e",
  *    "title": "Hike to Mount Fuji",

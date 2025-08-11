@@ -223,6 +223,32 @@ export class Repository<T> {
   async upsert(
     filter: Partial<Fields<T>>,
     updateFields: Partial<T>,
+    createFields: Partial<T>,
+    options: {
+      returning?: boolean;
+      runValidators?: boolean;
+    } = {}
+  ) {
+    const { returning = false, runValidators = true } = options;
+
+    const { set, unset } = this.getSetAndUnsetFields(updateFields);
+
+    let doc = await this.model.findOneAndUpdate(
+      filter,
+      { $set: set, $unset: unset },
+      { new: returning, runValidators }
+    );
+
+    if (!doc) {
+      doc = await this.model.create(createFields)
+    }
+
+    return returning ? doc?.toObject() : undefined;
+  }
+
+  /* async upsert(
+    filter: Partial<Fields<T>>,
+    updateFields: Partial<T>,
     options: {
       returning?: boolean;
       runValidators?: boolean;
@@ -244,7 +270,7 @@ export class Repository<T> {
     );
 
     return returning ? doc?.toObject() : undefined;
-  }
+  } */
 
   async insertMany(
     docs: Partial<T>[],
@@ -520,7 +546,7 @@ export class Repository<T> {
 
     Object.keys(updateFields).forEach((field) => {
       const key = field as keyof T;
-      if (updateFields[key] === undefined || updateFields[key] === null) {
+      if (updateFields[key] === null) {
         unset[key] = 1;
       } else {
         set[key] = updateFields[key];

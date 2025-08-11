@@ -22,7 +22,7 @@ export function computeAge(dateOfBirth: string | Date) {
 }
 
 export function isPlainObject(value: unknown): boolean {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null && !Array.isArray(value) && value !instanceof Date;
 }
 
 export function signJWT<T extends string | object | Buffer<ArrayBufferLike>>(

@@ -12,17 +12,17 @@ export default defineApi(
   defineHandler(async (req) => {
     const id = req.user!.id;
 
-    const passport = await passportRepository.findOne({
-      user: id
+    const passports = await passportRepository.findMany({
+      user: id 
     });
 
-    if (!passport) {
+    if (!passports) {
       throw HttpException.notFound("Passport data not found");
     }
 
     return {
       success: true,
-      passport
+      passports
     };
   })
 );

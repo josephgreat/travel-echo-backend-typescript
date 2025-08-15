@@ -27,14 +27,18 @@ export default defineApi(
       throw HttpException.notFound("Passport data not found");
     }
 
-    const { image } = passport;
+    const { images } = passport;
 
-    if (!image) {
+    if (!images || images.length === 0) {
       return HttpException.notFound("No previous passport image");
     }
 
     try {
-      await cloudinary.v2.uploader.destroy(image.publicId, { invalidate: true });
+     await Promise.all(
+        images.map((img) =>
+          cloudinary.v2.uploader.destroy(img.publicId, { invalidate: true })
+        )
+      );
       await Promise.all([
         cloudinary.v2.api.delete_folder(
           `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`
@@ -44,10 +48,10 @@ export default defineApi(
 
       return {
         success: true,
-        message: "Passport image deleted succesfully"
+        message: "Passport images deleted succesfully"
       };
     } catch (error) {
-      throw HttpException.internal(`Failed to delete image: ${(error as Error).message}`);
+      throw HttpException.internal(`Failed to delete images: ${(error as Error).message}`);
     }
   })
 );

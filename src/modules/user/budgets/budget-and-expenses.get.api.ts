@@ -1,5 +1,5 @@
 import { budgetRepository } from "#src/db/repositories/budget.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { castToObjectId } from "#src/utils/helpers";
@@ -12,7 +12,7 @@ const Schema = z.object({
     .refine((val) => isObjectIdOrHexString(val), { message: "Invalid budget ID" })
 });
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/budgets/:budget_id/expenses",

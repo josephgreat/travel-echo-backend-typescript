@@ -1,5 +1,5 @@
 import { expenseRepository } from "#src/db/repositories/expense.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { CLOUDINARY_BUDGET_FOLDER } from "#src/utils/constants";
@@ -12,7 +12,7 @@ import cloudinary from "cloudinary";
  * @use {Auth}
  * @res {json} { "success": true, "message": "Expense receipt deleted successfully" }
  */
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/expenses/:expense_id/receipt",

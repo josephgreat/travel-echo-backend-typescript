@@ -1,8 +1,8 @@
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { getNextLevelBadgesWithProgress } from "./services/get-next-level-badges";
 
-export default api(
+export default defineApi(
   { group: "/users/me", path: "/next-level-badges", method: "get" },
   defineHandler(async (req) => {
     const { id } = req.user!;
@@ -26,7 +26,7 @@ export default api(
  *   "badges": [
  *      {
  *       "_id": "64e5a320c41e2f5e8e1c29a8",
- *       "category": "MEMORY | TRIP",
+ *       "category": "MEMORY | TRIP | BUDGET",
  *       "nextBadge": {
  *          "_id": "64e5a320c41e2f5e8e1c29a8",
  *          "name": "string",

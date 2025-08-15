@@ -11,7 +11,8 @@ export enum BadgeOperator {
 
 export enum BadgeCategory {
   Trip = "TRIP",
-  Memory = "MEMORY"
+  Memory = "MEMORY",
+  Budget = "BUDGET"
 }
 
 @modelOptions({ schemaOptions: { timestamps: true } })

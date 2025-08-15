@@ -1,12 +1,12 @@
 import { budgetRepository } from "#src/db/repositories/budget.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { CLOUDINARY_BUDGET_FOLDER } from "#src/utils/constants";
 import deleteBudgetExpenses from "./services/delete-budget-expenses";
 import cloudinary from "cloudinary";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/budgets/:budget_id",

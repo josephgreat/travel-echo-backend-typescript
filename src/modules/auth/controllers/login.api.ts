@@ -1,6 +1,6 @@
 import { JWTPayload } from "#src/config/passport.config";
 import { userRepository } from "#src/db/repositories/user.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import {
@@ -79,7 +79,7 @@ const Schema = z.object(
  *  }
  * }
  */
-export default api(
+export default defineApi(
   {
     group: "/auth",
     path: "/login",

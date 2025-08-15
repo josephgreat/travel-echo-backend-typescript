@@ -5,6 +5,7 @@ import auth from "#src/middleware/auth";
 export const routeConfig: GenerateRoutesOptions = {
   globalPrefix: "/api/v1",
   groupMiddleware: {
-    "/users/me": auth(UserRole.User)
+    "/users/me": auth(UserRole.User),
+    "/community": auth([UserRole.Admin, UserRole.User])
   }
 };

@@ -1,4 +1,4 @@
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
@@ -45,7 +45,7 @@ const Schema = z
  * @body {json} { "name": "string", "email": "string", "password": "string", "confirmPassword": "string" }
  * @res {json}  { "success": true, "message": "string", "user": {...} }
  */
-export default api(
+export default defineApi(
   {
     group: "/auth",
     path: "/register",

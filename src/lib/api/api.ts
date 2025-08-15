@@ -18,7 +18,7 @@ export interface ApiDefinition {
   handlers: ApiRequestHandler[];
 }
 
-export const api = (options: ApiOptions, ...handlers: ApiRequestHandler[]) => {
+export const defineApi = (options: ApiOptions, ...handlers: ApiRequestHandler[]) => {
   let { path = "" } = options;
   const { expose = true, method = "get", group = "", middleware = [] } = options;
 

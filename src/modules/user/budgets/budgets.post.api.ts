@@ -1,9 +1,12 @@
+import { BadgeCategory } from "#src/db/models/badge.model";
 import { BudgetZodSchema, BudgetZodType } from "#src/db/models/budget.model";
 import { budgetRepository } from "#src/db/repositories/budget.repository";
-import { api } from "#src/lib/api/api";
+import { milestoneRepository } from "#src/db/repositories/milestone.repository";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
+import { awardBadgeIfEligible } from "../badges/services/award-badge-if-eligible";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/budgets",
@@ -14,13 +17,23 @@ export default api(
     const data = req.validatedBody as BudgetZodType;
     const { id } = req.user!;
 
-    const budget = await budgetRepository.create({
-      user: id,
-      ...data
-    });
+    const milestone = await milestoneRepository.findOrCreate({ user: id }, { user: id });
+
+    const [budget] = await Promise.all([
+      budgetRepository.create({
+        user: id,
+        ...data
+      }),
+
+      milestoneRepository.updateOne(milestone._id, { totalBudgets: milestone.totalBudgets + 1 })
+    ]);
+
+    const { hasEarnedNewBadge, badge } = await awardBadgeIfEligible(id, BadgeCategory.Budget);
 
     return {
-      budget
+      budget,
+      hasEarnedNewBadge,
+      badge
     };
   })
 );
@@ -35,6 +48,8 @@ export default api(
  * @res {json}
  * {
  *   "success": true,
+ *   "hasEarnedNewBadge": "boolean",
+ *   "badge": "badge info | null",
  *   "budget": {
  *      "_id": "string",
  *      "user": "string",

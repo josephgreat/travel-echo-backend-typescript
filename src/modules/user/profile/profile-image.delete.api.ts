@@ -1,5 +1,5 @@
 import { profileRepository } from "#src/db/repositories/profile.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import cloudinary from "cloudinary";
@@ -11,7 +11,7 @@ import cloudinary from "cloudinary";
  * @use {Auth}
  * @res {json} { "success": true, "message": "Profile image removed successfully" }
  */
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/profile/image",

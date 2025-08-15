@@ -1,6 +1,6 @@
 import { CloudinaryImage } from "#src/db/models/models";
 import { expenseRepository } from "#src/db/repositories/expense.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
@@ -12,7 +12,7 @@ import {
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/expenses/:expense_id/receipt",

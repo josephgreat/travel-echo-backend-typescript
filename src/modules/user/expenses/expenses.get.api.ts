@@ -1,5 +1,5 @@
 import { expenseRepository } from "#src/db/repositories/expense.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { isObjectIdOrHexString } from "mongoose";
 import { z } from "zod";
@@ -32,7 +32,7 @@ import { z } from "zod";
  * @use {Query}
  */
 
-export const getAllExpenses = api(
+export const getAllExpenses = defineApi(
   {
     group: "/users/me",
     path: "/expenses",
@@ -84,7 +84,7 @@ const Schema = z.object({
     .refine((val) => isObjectIdOrHexString(val), { message: "Invalid expense ID" })
 });
 
-export const getSingleExpense = api(
+export const getSingleExpense = defineApi(
   {
     group: "/users/me",
     path: "/expenses/:expense_id",

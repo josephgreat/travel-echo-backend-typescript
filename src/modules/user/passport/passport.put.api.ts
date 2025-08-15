@@ -1,11 +1,11 @@
 import { PassportZodSchema, PassportZodType } from "#src/db/models/passport.model";
 import { passportRepository } from "#src/db/repositories/passport.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { castToObjectId } from "#src/utils/helpers";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/passport",

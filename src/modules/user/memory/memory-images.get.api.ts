@@ -1,11 +1,11 @@
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { memoryRepository } from "#src/db/repositories/memory.repository";
 import { memoryImageRepository } from "#src/db/repositories/memory-image.repository";
 import { GET_REQUEST_DATA_LIMIT } from "#src/utils/constants";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/memories/:memory_id/images",

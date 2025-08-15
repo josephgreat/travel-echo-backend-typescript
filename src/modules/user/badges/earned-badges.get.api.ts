@@ -1,9 +1,9 @@
 import { earnedBadgeRepository } from "#src/db/repositories/earned-badge.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { GET_REQUEST_DATA_LIMIT } from "#src/utils/constants";
 
-export default api(
+export default defineApi(
   { group: "/users/me", path: "/earned-badges", method: "get" },
   defineHandler(async (req) => {
     const { id } = req.user!;

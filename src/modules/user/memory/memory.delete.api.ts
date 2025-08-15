@@ -1,6 +1,6 @@
 import { memoryRepository } from "#src/db/repositories/memory.repository";
 // import { milestoneRepository } from "#src/db/repositories/milestone.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import deleteMemoryImages from "./services/delete-memory-images";
@@ -19,7 +19,7 @@ import cloudinary from "cloudinary";
  *  "imagesDeleted": 20
  * }
  */
-export default api(
+export default defineApi(
   { group: "/users/me", path: "/memories/:memory_id", method: "delete" },
   defineHandler(async (req) => {
     const { id } = req.user!;
@@ -31,7 +31,7 @@ export default api(
       throw HttpException.notFound("Memory not found");
     }
 
-   /*  const milestone = await milestoneRepository.findOrCreate(
+    /*  const milestone = await milestoneRepository.findOrCreate(
       { user: id },
       { user: id, totalMemories: 0, totalTrips: 0 }
     ); */
@@ -40,7 +40,7 @@ export default api(
 
     await Promise.all([
       memoryRepository.deleteOne(memory._id),
-      cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`),
+      cloudinary.v2.api.delete_folder(`MEMORY_IMAGES/${memory_id}`)
       /* milestoneRepository.updateOne(milestone._id, {
         totalMemories: Math.min(milestone.totalMemories - 1, 0)
       }) */

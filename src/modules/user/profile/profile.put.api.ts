@@ -1,6 +1,6 @@
 import { Gender } from "#src/db/models/profile.model";
 import { profileRepository } from "#src/db/repositories/profile.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
@@ -45,7 +45,7 @@ const Schema = z.object({
   }
  * @res {json} { "success": true, "profile": {...} }
  */
-export const updateProfile = api(
+export const updateProfile = defineApi(
   {
     group: "/users/me",
     path: "/profile",

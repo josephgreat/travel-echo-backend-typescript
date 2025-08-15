@@ -1,9 +1,9 @@
 import { passportRepository } from "#src/db/repositories/passport.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "passport",

@@ -5,6 +5,7 @@ import { milestoneRepository } from "#src/db/repositories/milestone.repository";
 import { castToObjectId } from "#src/utils/helpers";
 import { Types } from "mongoose";
 import calculateProgress from "./calculate-progress";
+import badgeMilestoneMap from "./badge-milestone-map";
 
 export async function getNextLevelBadgesWithProgress(userId: string | Types.ObjectId) {
   const userObjectId = castToObjectId(userId);
@@ -28,8 +29,7 @@ export async function getNextLevelBadgesWithProgress(userId: string | Types.Obje
 
   // 3. Loop categories
   for (const category of [BadgeCategory.Trip, BadgeCategory.Memory]) {
-    const currentValue =
-      category === BadgeCategory.Trip ? milestone.totalTrips : milestone.totalMemories;
+    const currentValue = milestone[badgeMilestoneMap[category]]
 
     // 4. Get badges in category sorted by level
     const badges = await badgeRepository.findMany({ category }, { sort: { level: 1 } });

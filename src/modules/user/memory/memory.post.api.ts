@@ -1,14 +1,14 @@
 import { MemoryZodSchema } from "#src/db/models/memory.model";
 import { memoryRepository } from "#src/db/repositories/memory.repository";
 import { milestoneRepository } from "#src/db/repositories/milestone.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
 import { awardBadgeIfEligible } from "../badges/services/award-badge-if-eligible";
 import { BadgeCategory } from "#src/db/models/badge.model";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/memories",
@@ -21,10 +21,7 @@ export default api(
     const data = req.validatedBody as z.infer<typeof MemoryZodSchema>;
 
     try {
-      const milestone = await milestoneRepository.findOrCreate(
-        { user: id },
-        { user: id, totalMemories: 0, totalTrips: 0 }
-      );
+      const milestone = await milestoneRepository.findOrCreate({ user: id }, { user: id });
 
       const [memory] = await Promise.all([
         memoryRepository.createUnique(

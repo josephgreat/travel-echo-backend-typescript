@@ -1,10 +1,10 @@
 import { memoryRepository } from "#src/db/repositories/memory.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { GET_REQUEST_DATA_LIMIT } from "#src/utils/constants";
 import parseSearchQueries from "./services/parse-search-queries";
 
-export default api(
+export default defineApi(
   { group: "/users/me", path: "/memories", method: "get" },
   defineHandler(async (req) => {
     const { id } = req.user!;

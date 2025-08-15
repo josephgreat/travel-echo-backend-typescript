@@ -1,6 +1,6 @@
 import { driverProfileRepository } from "#src/db/repositories/driver-profile.repository";
 import { userRepository } from "#src/db/repositories/user.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { MIN_LICENSE_PLATE_LENGTH } from "#src/utils/constants";
@@ -49,7 +49,7 @@ export const Schema = z.object({
  * }
  */
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "driver-profile/{:user_id}",

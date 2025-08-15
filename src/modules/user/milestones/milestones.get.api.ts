@@ -1,8 +1,8 @@
 import { milestoneRepository } from "#src/db/repositories/milestone.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "milestones",

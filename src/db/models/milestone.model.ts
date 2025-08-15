@@ -14,6 +14,9 @@ export class Milestone {
 
   @prop({ default: 0 })
   public totalMemories!: number;
+
+  @prop({ default: 0 })
+  public totalBudgets!: number;
 }
 
 export const MilestoneModel = getModelForClass(Milestone);

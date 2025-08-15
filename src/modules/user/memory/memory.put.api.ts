@@ -1,11 +1,11 @@
 import { memoryRepository } from "#src/db/repositories/memory.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
 import { MemoryZodSchema } from "#src/db/models/memory.model";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/memories/:memory_id",

@@ -1,10 +1,10 @@
 import { BudgetZodSchema, BudgetZodType } from "#src/db/models/budget.model";
 import { budgetRepository } from "#src/db/repositories/budget.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/budgets/:budget_id",

@@ -1,11 +1,11 @@
 import { budgetRepository } from "#src/db/repositories/budget.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { isObjectIdOrHexString } from "mongoose";
 import { z } from "zod";
 
-export const getAllBudgets = api(
+export const getAllBudgets = defineApi(
   {
     group: "/users/me",
     path: "/budgets",
@@ -60,7 +60,7 @@ const Schema = z.object({
     .refine((val) => isObjectIdOrHexString(val), { message: "Invalid budget ID" })
 });
 
-export const getSingleBudget = api(
+export const getSingleBudget = defineApi(
   {
     group: "/users/me",
     path: "/budgets/:budget_id",

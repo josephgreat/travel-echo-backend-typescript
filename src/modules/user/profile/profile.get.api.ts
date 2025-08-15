@@ -1,5 +1,5 @@
 import { profileRepository } from "#src/db/repositories/profile.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 
 /**
@@ -9,7 +9,7 @@ import { defineHandler } from "#src/lib/api/handlers";
  * @use {Auth}
  * @res {json} { "success": true, "profile": {...} }
  */
-export const getProfile = api(
+export const getProfile = defineApi(
   { group: "/users/me", path: "/profile", method: "get" },
   defineHandler(async (req) => {
     const id = req.user?.id;

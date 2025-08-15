@@ -1,5 +1,5 @@
 import { memoryRepository } from "#src/db/repositories/memory.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import {
@@ -28,7 +28,7 @@ const Schema = z
     `A maximum of ${MAX_MEMORY_IMAGES_PER_DELETE} images can be deleted at a time`
   );
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/memories/:memory_id/images/delete",

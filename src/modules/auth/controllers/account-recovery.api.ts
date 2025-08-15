@@ -6,7 +6,7 @@ import { sendMail } from "#src/lib/email/email";
 import { OTP_EXPIRY_TIME } from "#src/utils/constants";
 import { pick } from "#src/utils/helpers";
 import { compare } from "bcrypt";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 
@@ -32,7 +32,7 @@ const Schema_1 = z.object({
  * }
  */
 
-export const sendAccountRecoveryOtp = api(
+export const sendAccountRecoveryOtp = defineApi(
   {
     group: "/auth",
     path: "/recovery/send-otp",
@@ -85,7 +85,7 @@ const Schema_2 = z.object({
  *  }
  * }
  */
-export const verifyAccountRecoveryOTP = api(
+export const verifyAccountRecoveryOTP = defineApi(
   {
     group: "/auth",
     path: "/recovery/verify-otp",
@@ -147,7 +147,7 @@ const Schema_3 = z
  *  "message": "Password reset successfully."
  * }
  */
-export const resetPassword = api(
+export const resetPassword = defineApi(
   {
     group: "/auth",
     path: "/recovery/reset-password",

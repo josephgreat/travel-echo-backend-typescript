@@ -5,6 +5,7 @@ import { milestoneRepository } from "#src/db/repositories/milestone.repository";
 import { castToObjectId } from "#src/utils/helpers";
 import { Types } from "mongoose";
 import checkEligibility from "./check-eligibility";
+import badgeMilestoneMap from "./badge-milestone-map";
 
 export async function getNextEligibleBadge(
   userId: string | Types.ObjectId,
@@ -18,8 +19,7 @@ export async function getNextEligibleBadge(
     { user: userObjectId }
   );
 
-  const currentValue =
-    category === BadgeCategory.Trip ? milestone.totalTrips : milestone.totalMemories;
+  const currentValue = milestone[badgeMilestoneMap[category]];
 
   // 2. Get earned badge IDs
   const earnedBadges = await earnedBadgeRepository.findMany({ user: userObjectId });
@@ -53,15 +53,11 @@ export async function getNextEligibleBadges(userId: string | Types.ObjectId) {
   const earnedBadgeIds = earnedBadges.map((b) => b.badge.toString());
 
   // 3. Prepare result object
-  const results: Record<BadgeCategory, Badge | null> = {
-    [BadgeCategory.Trip]: null,
-    [BadgeCategory.Memory]: null
-  };
+  const results: Partial<Record<BadgeCategory, Badge | null>> = {};
 
   // 4. Loop through both categories
   for (const category of [BadgeCategory.Trip, BadgeCategory.Memory]) {
-    const currentValue =
-      category === BadgeCategory.Trip ? milestone.totalTrips : milestone.totalMemories;
+    const currentValue = milestone[badgeMilestoneMap[category]];
 
     const badges = await badgeRepository.findMany({ category }, { sort: { level: 1 } });
 

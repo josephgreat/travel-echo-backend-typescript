@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form>
+      <input type="text" name="name" placeholder="Enter your name" />
+
+      <input type="number" name="age" placeholder="Enter your age" />
+
+      <input type="file" name="media" id="file" />
+
+      <input id="submit" type="submit" value="Submit" />
+    </form>
+
+    <script>
+      const form = document.querySelector("form");
+
+      form.addEventListener("submit", submit);
+
+      async function submit(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        startLoading();
+
+        try {
+          const res = await fetch("/api/v1/upload", {
+            method: "post",
+            body: formData
+          });
+
+          const data = await res.json();
+
+          console.log(data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          endLoading()
+        }
+      }
+
+      function startLoading() {
+        const btn = document.querySelector("#submit");
+        btn.textContent = "Loading";
+      }
+
+      function endLoading() {
+        const btn = document.querySelector("#submit");
+        btn.textContent = "Submit";
+      }
+    </script>
+  </body>
+</html>

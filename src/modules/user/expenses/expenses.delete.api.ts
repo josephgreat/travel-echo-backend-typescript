@@ -1,5 +1,5 @@
 import { expenseRepository } from "#src/db/repositories/expense.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { PROCESSING_BATCH_SIZE } from "#src/utils/constants";
@@ -7,7 +7,7 @@ import cloudinary from "cloudinary";
 import { DeleteResult } from "mongoose";
 import { z } from "zod";
 
-export const deleteSingleExpense = api(
+export const deleteSingleExpense = defineApi(
   {
     group: "/users/me",
     path: "/expenses/:expense_id",
@@ -55,7 +55,7 @@ const Schema = z
     message: `Only ${PROCESSING_BATCH_SIZE} expense IDs are allowed at a time`
   });
 
-export const deleteMultipleExpenses = api(
+export const deleteMultipleExpenses = defineApi(
   {
     group: "/users/me",
     path: "/expenses/delete",

@@ -1,6 +1,6 @@
 import { memoryImageRepository } from "#src/db/repositories/memory-image.repository";
 import { memoryRepository } from "#src/db/repositories/memory.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { MAX_UNIQUE_IMAGE_NAME_GENERATION_ATTEMPTS } from "#src/utils/constants";
@@ -36,7 +36,7 @@ const Schema = z.object({
  *  }
  * }
  */
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/memories/:memory_id/images/:image_id",

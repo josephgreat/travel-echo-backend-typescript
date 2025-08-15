@@ -1,5 +1,5 @@
 import { passportRepository } from "#src/db/repositories/passport.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import cloudinary from "cloudinary";
@@ -12,7 +12,7 @@ import { CLOUDINARY_PASSPORT_IMAGES_FOLDER } from "#src/utils/constants";
  * @use {Auth}
  * @res {json} { "success": true, "message": "Passport image deleted successfully" }
  */
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/passport/image",
@@ -40,8 +40,10 @@ export default api(
         )
       );
       await Promise.all([
-        cloudinary.v2.api.delete_folder(`${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`),
-        passportRepository.updateOne({ _id: passport._id, user: userId }, { images: [] })
+        cloudinary.v2.api.delete_folder(
+          `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`
+        ),
+        passportRepository.updateOne({ _id: passport._id, user: userId }, { image: undefined })
       ]);
 
       return {

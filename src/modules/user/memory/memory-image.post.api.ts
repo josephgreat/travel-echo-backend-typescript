@@ -1,4 +1,4 @@
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { memoryRepository } from "#src/db/repositories/memory.repository";
@@ -14,7 +14,7 @@ import { MemoryImage } from "#src/db/models/memory-image.model";
 import cloudinary from "cloudinary";
 import { AsyncBusboy, FileUploadResult } from "#src/utils/async-busboy";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/memories/:memory_id/images",

@@ -5,6 +5,7 @@ import { milestoneRepository } from "#src/db/repositories/milestone.repository";
 import { castToObjectId } from "#src/utils/helpers";
 import { Types } from "mongoose";
 import checkEligibility from "./check-eligibility";
+import badgeMilestoneMap from "./badge-milestone-map";
 
 /**
  * Checks if a user has earned a new badge in a given category.
@@ -22,9 +23,8 @@ export async function awardBadgeIfEligible(
     { user: userObjectId }
   );
 
-  const currentValue =
-    category === BadgeCategory.Trip ? milestone.totalTrips : milestone.totalMemories;
-
+  const currentValue = milestone[badgeMilestoneMap[category]];
+  
   // 2. Get earned badges
   const earnedBadges = await earnedBadgeRepository.findMany({ user: userObjectId });
   const earnedBadgeIds = earnedBadges.map((b) => b.badge.toString());

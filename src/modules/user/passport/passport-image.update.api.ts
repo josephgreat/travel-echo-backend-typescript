@@ -1,6 +1,6 @@
 import { CloudinaryImage } from "#src/db/models/models";
 import { passportRepository } from "#src/db/repositories/passport.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
@@ -12,7 +12,7 @@ import {
 import { randomString } from "#src/utils/helpers";
 import cloudinary from "cloudinary";
 
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/passport/:passportId/images",
@@ -41,11 +41,11 @@ export default api(
      const uploadedImages: CloudinaryImage[] = [];
 
     uploader.handler(async (name, file) => {
-      const imagePublicId = PASSPORT_IMAGE_PUBLIC_ID_PREFIX
-        .concat(passportId)
-        .concat(`_${randomString(16, "numeric")}`);
-    
-      const result = await new Promise<CloudinaryImage>((resolve, reject) => {
+      const imagePublicId = PASSPORT_IMAGE_PUBLIC_ID_PREFIX.concat(passport._id.toString()).concat(
+        `_${randomString(16, "numeric")}`
+      );
+
+      return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
             asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passportId}`,

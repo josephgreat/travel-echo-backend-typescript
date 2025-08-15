@@ -1,5 +1,5 @@
 import { userRepository } from "#src/db/repositories/user.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { z } from "zod";
@@ -21,7 +21,7 @@ const Schema_1 = z.object({
  * @body {json} { "email": "string" }
  * @res {json}  { "success": true, "message": "OTP sent to email successfully." }
  */
-export const sendEmailVerificationOtp = api(
+export const sendEmailVerificationOtp = defineApi(
   {
     group: "/auth",
     path: "/verification/send-otp",
@@ -66,7 +66,7 @@ const Schema_2 = z.object({
  * @body {json} { "email": "user@email.com", "otp": "123456" }
  * @res {json}  { "success": true, "message": "Account verified successfully." }
  */
-export const validateOtpAndVerifyAccount = api(
+export const validateOtpAndVerifyAccount = defineApi(
   {
     group: "/auth",
     path: "/verification/verify",

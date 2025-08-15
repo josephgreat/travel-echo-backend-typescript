@@ -1,6 +1,6 @@
 import { CloudinaryImage } from "#src/db/models/models";
 import { profileRepository } from "#src/db/repositories/profile.repository";
-import { api } from "#src/lib/api/api";
+import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
 import { AsyncBusboy } from "#src/utils/async-busboy";
@@ -25,7 +25,7 @@ import cloudinary from "cloudinary";
  *   }
  * }
  */
-export default api(
+export default defineApi(
   {
     group: "/users/me",
     path: "/profile/image",

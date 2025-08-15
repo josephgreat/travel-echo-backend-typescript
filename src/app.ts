@@ -31,6 +31,11 @@ app.get("/doc", (req, res) => {
   const filePath = path.resolve("public/api.html");
   res.sendFile(filePath);
 });
+
+app.get("/upload", (req, res) => {
+  res.sendFile(path.resolve("public/upload.html"));
+});
+
 (async function () {
   app.use(parseRequestQuery);
   await generateRoutes(app, routeConfig);

@@ -23,8 +23,8 @@ export class Passport {
   @prop({ required: true })
   public passportNumber!: string;
 
-  @prop({ enum: PassportType, required: true })
-  public passportType!: PassportType;
+  @prop({required: true })
+  public passportType!: string;
 
   @prop({ required: true })
   public fullName!: string;
@@ -38,8 +38,8 @@ export class Passport {
   @prop({ required: true })
   public expiryDate!: Date;
 
-  @prop()
-  public image?: CloudinaryImage;
+  @prop({type: () => [CloudinaryImage], default: []})
+  public images?: CloudinaryImage[];
 
   @prop()
   public placeOfIssue?: string;
@@ -58,14 +58,7 @@ export const PassportZodSchema = z.object(
     passportNumber: z
       .string({ message: "Passport number is required" })
       .min(MIN_PASSPORT_NUMBER_LENGTH, { message: "Passport number is too short" }),
-    passportType: z.enum(
-      [
-        PassportType.Regular,
-        PassportType.Official,
-        PassportType.Diplomatic,
-        PassportType.Service,
-        PassportType.Emergency
-      ],
+    passportType: z.string(
       { message: "Passport type is required" }
     ),
     fullName: z.string({ message: "Full name is required" }),

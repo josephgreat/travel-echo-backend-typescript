@@ -15,14 +15,18 @@ import cloudinary from "cloudinary";
 export default defineApi(
   {
     group: "/users/me",
-    path: "/passport/image",
-    method: "patch"
+    path: "/passport/:passportId/images",
+    method: "put"
   },
   defineHandler(async (req) => {
     const userId = req.user!.id;
-
-    const passport = await passportRepository.findOne({ user: userId });
-
+    const { passportId } = req.params;
+    const passport = await passportRepository.findOne({ _id: passportId, user: userId });
+    
+    if (!passport) {
+      throw HttpException.notFound("Passport not found");
+    }
+    
     if (!passport) {
       throw HttpException.notFound("Passport data not found");
     }
@@ -30,10 +34,11 @@ export default defineApi(
     const uploader = new AsyncBusboy({
       headers: req.headers,
       limits: {
-        files: 1,
         fileSize: MAX_PASSPORT_IMAGE_SIZE
       }
     });
+
+     const uploadedImages: CloudinaryImage[] = [];
 
     uploader.handler(async (name, file) => {
       const imagePublicId = PASSPORT_IMAGE_PUBLIC_ID_PREFIX.concat(passport._id.toString()).concat(
@@ -43,73 +48,78 @@ export default defineApi(
       return new Promise((resolve, reject) => {
         const stream = cloudinary.v2.uploader.upload_stream(
           {
-            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`,
+            asset_folder: `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passportId}`,
             public_id: imagePublicId,
             display_name: imagePublicId,
             unique_filename: true
           },
           (error, result) => {
             if (error) return reject(error);
-
-            if (result) {
-              resolve({
-                url: result.secure_url,
-                name: result.display_name,
-                publicId: result.public_id,
-                assetId: result.asset_id,
-                format: result.format,
-                bytes: result.bytes
-              });
-            } else {
-              reject(new Error("No result from Cloudinary"));
-            }
+            if (!result) return reject(new Error("No result from Cloudinary"));
+            resolve({
+              url: result.secure_url,
+              name: result.display_name,
+              publicId: result.public_id,
+              assetId: result.asset_id,
+              format: result.format,
+              bytes: result.bytes
+            });
           }
         );
-
         file.pipe(stream);
       });
+    
+      uploadedImages.push(result);
     });
 
-    const { error, data } = await uploader.upload<CloudinaryImage>(req);
 
-    if (!data || !data[0].data || error) {
+    const { error } = await uploader.upload(req);
+
+    if (error || uploadedImages.length === 0) {
       throw HttpException.badRequest(error?.message || "Upload failed");
     }
-
-    if (passport.image) {
-      await cloudinary.v2.uploader.destroy(passport.image.publicId, { invalidate: true });
+  
+    // 6️⃣ Delete existing images from Cloudinary
+    if (passport.images && passport.images.length > 0) {
+      for (const oldImage of passport.images) {
+        if (oldImage?.publicId) {
+          await cloudinary.v2.uploader.destroy(oldImage.publicId, { invalidate: true });
+        }
+      }
     }
-
+  
+    // 7️⃣ Replace images in DB
     const updatedPassport = await passportRepository.updateOne(passport._id, {
-      image: data[0].data
+      images: uploadedImages
     });
-
+  
     if (!updatedPassport) {
-      throw HttpException.internal("Failed to update passport image: Passport data not found");
+      throw HttpException.internal("Failed to update passport images");
     }
-
+  
+    // 8️⃣ Return result
     return {
-      image: updatedPassport.image
+      images: updatedPassport.images
     };
   })
 );
 
 /**
- * @api {put} /users/me/passport/image
- * @desc Uploads the passport image
+ * @api {put} /users/me/passport/:passportId/images
+ * @desc Upload multiple passport images (replaces old ones)
  * @domain {User: Passport}
  * @use {Auth}
- * @body {FormData} Form Data
+ * @body {FormData} Form Data (field: passportImages[])
  * @res {json}
  * {
  *  "success": true,
- *  "image": {
- *    "url": "https://res.cloudinary.com/...IMG_PASS_68122116ecccbf17300a8829.png",
- *    "name": "IMG_PASS_68122116ecccbf17300a8829",
- *    "publicId": "IMG_PASS_68122116ecccbf17300a8829",
- *    "assetId": "63545234234344",
- *    "format": "jpg",
- *    "bytes": 67541
- *   }
+ *  "images": [
+ *    {
+ *      "url": "...",
+ *      "name": "...",
+ *      "publicId": "...",
+ *      ...
+ *    }
+ *  ]
  * }
  */

@@ -6,27 +6,38 @@ import { HttpException } from "#src/lib/api/http";
 export default defineApi(
   {
     group: "/users/me",
-    path: "passport",
+    path: "/passport/:passportId",
     method: "delete"
   },
   defineHandler(async (req) => {
     const userId = req.user!.id;
-    const result = await passportRepository.deleteOne({ user: userId });
+    const { passportId } = req.params;
+
+    if (!passportId) {
+      throw HttpException.badRequest("Passport ID is required");
+    }
+
+    const result = await passportRepository.deleteOne({
+      _id: passportId,
+      user: userId
+    });
 
     if (result.deletedCount === 0) {
-      throw HttpException.notFound("Passport data not found");
+      throw HttpException.notFound("Passport not found or you do not have permission to delete it");
     }
 
     return {
-      message: "Passport data deleted successfully"
+      success: true,
+      message: "Passport deleted successfully"
     };
   })
 );
 
 /**
- * @api {delete} /users/me/passport
- * @desc Deletes the user's passport information
+ * @api {delete} /users/me/passport/:passportId
+ * @desc Deletes a specific passport of the authenticated user by ID
  * @domain {User: Passport}
  * @use {Auth}
- * @res {json} { "success": true, "message": "Passport data deleted successfully" }
+ * @param {String} passportId
+ * @res {json} { "success": true, "message": "Passport deleted successfully" }
  */

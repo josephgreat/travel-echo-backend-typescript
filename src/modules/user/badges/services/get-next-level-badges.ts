@@ -27,8 +27,14 @@ export async function getNextLevelBadgesWithProgress(userId: string | Types.Obje
     percentageProgress: number; // 0 - 100
   }[] = [];
 
+  const categories: BadgeCategory[] = [
+    BadgeCategory.Budget,
+    BadgeCategory.Memory,
+    BadgeCategory.Trip
+  ]
+
   // 3. Loop categories
-  for (const category of [BadgeCategory.Trip, BadgeCategory.Memory]) {
+  for (const category of categories) {
     const currentValue = milestone[badgeMilestoneMap[category]]
 
     // 4. Get badges in category sorted by level

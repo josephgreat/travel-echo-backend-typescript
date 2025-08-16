@@ -56,15 +56,17 @@ export default defineApi(
           (error, result) => {
             if (error) return reject(error);
             if (!result) return reject(new Error("No result from Cloudinary"));
-            resolve({
+             const cloudinaryImage: CloudinaryImage = {
               url: result.secure_url,
-              name: result.display_name,
+              name: result.display_name ?? imagePublicId,
               publicId: result.public_id,
-              assetId: result.asset_id,
-              format: result.format,
-              bytes: result.bytes
-            });
-            uploadedImages.push(result);
+              assetId: result.asset_id!,
+              format: result.format!,
+              bytes: result.bytes!
+            };
+    
+            uploadedImages.push(cloudinaryImage);
+            resolve(cloudinaryImage);
           }
         );
         file.pipe(stream);

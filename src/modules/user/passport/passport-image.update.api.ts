@@ -64,12 +64,12 @@ export default defineApi(
               format: result.format,
               bytes: result.bytes
             });
+            uploadedImages.push(reult);
           }
         );
         file.pipe(stream);
       });
     
-      uploadedImages.push(stream);
     });
 
 

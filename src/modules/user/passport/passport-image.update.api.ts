@@ -69,7 +69,7 @@ export default defineApi(
         file.pipe(stream);
       });
     
-      uploadedImages.push(result);
+      uploadedImages.push(stream);
     });
 
 

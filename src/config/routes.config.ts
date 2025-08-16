@@ -6,6 +6,6 @@ export const routeConfig: GenerateRoutesOptions = {
   globalPrefix: "/api/v1",
   groupMiddleware: {
     "/users/me": auth(UserRole.User),
-    "/community": auth([UserRole.Admin, UserRole.User])
+    "/community": auth([UserRole.Admin, UserRole.User]),
   }
 };

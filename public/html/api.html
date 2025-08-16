@@ -1721,15 +1721,22 @@
                         <code>
                           <pre>{
   "success": true,
-  "data": {
-    "MEMORY": {
-      "highestEarnedBadge": "Badge | null",
-      "nextLevelBadge": "Badge",
-      "currentValue": "number",
-      "requiredValue": "number",
-      "percentageProgress": "number"
+  "badges": [
+    {
+      "_id": "64e5a320c41e2f5e8e1c29a8",
+      "category": "MEMORY | TRIP | BUDGET",
+      "nextBadge": {
+        "_id": "64e5a320c41e2f5e8e1c29a8",
+        "name": "string",
+        "level": "number",
+        "description": "string",
+        "category": "TRIP | MEMORY...",
+        "operator": "EQ | GT | LT | GTE | LTE",
+        "value": "number"
+      },
+      "percentageProgress": 40
     }
-  }
+  ]
 }</pre>
                         </code>
                       </div>
@@ -5035,8 +5042,8 @@
           </div> <div class="api">
             <header class="api-header delete">
               <p class="method">DELETE</p>
-              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/passport/{passportId}</p>
-              <p style="font-size: 0.9rem; color: var(--slate-600)">Deletes a specific passport of the authenticated user by ID</p>
+              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/passport</p>
+              <p style="font-size: 0.9rem; color: var(--slate-600)">Deletes the user's passport information</p>
 
               <div class="icons">
               <div class="protected" style="color: var(--slate-400)">
@@ -5074,42 +5081,7 @@
                 </header>
     
                 <div class="content-section" style="margin-top: 0.75rem; font-size: 0.88rem; font-weight: 500;">
-                  <section data-content="params" class="params-content">
-                    <div style="overflow-x: auto; font-family: monospace; border-radius: 5px;">
-                      <table class="simple-table">
-                        <thead>
-                          <tr style="text-align: left;">
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Required</th>
-                            <th>Description</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          
-                          <tr>
-                            <td>
-                              <b>passportId</b>
-                            </td>
-                            <td style="color: var(--blue-600)">path</td>
-                            <td style="font-style: italic;">true</td>
-                            <td>passportId</td>
-                          </tr>
-                          
-                          <tr>
-                            <td>
-                              <b>String</b>
-                            </td>
-                            <td style="color: var(--blue-600)">path</td>
-                            <td style="font-style: italic;">true</td>
-                            <td>passportId</td>
-                          </tr>
-                          
-                        </tbody>
-                      </table>
-                    </div>
-                  </section>
+                  
 
                   <section data-content="headers" class="headers-content">
                     <div class="code-block">
@@ -5133,7 +5105,7 @@
                         <code>
                           <pre>{
   "success": true,
-  "message": "Passport deleted successfully"
+  "message": "Passport data deleted successfully"
 }</pre>
                         </code>
                       </div>
@@ -5144,8 +5116,8 @@
           </div> <div class="api">
             <header class="api-header put">
               <p class="method">PUT</p>
-              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/passport/{passportId}/images</p>
-              <p style="font-size: 0.9rem; color: var(--slate-600)">Upload multiple passport images (replaces old ones)</p>
+              <p style="font-family: monospace; font-weight: 600; font-size: 0.9rem;">/users/me/passport/image</p>
+              <p style="font-size: 0.9rem; color: var(--slate-600)">Uploads the passport image</p>
 
               <div class="icons">
               <div class="protected" style="color: var(--slate-400)">
@@ -5183,33 +5155,7 @@
                 </header>
     
                 <div class="content-section" style="margin-top: 0.75rem; font-size: 0.88rem; font-weight: 500;">
-                  <section data-content="params" class="params-content">
-                    <div style="overflow-x: auto; font-family: monospace; border-radius: 5px;">
-                      <table class="simple-table">
-                        <thead>
-                          <tr style="text-align: left;">
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Required</th>
-                            <th>Description</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          
-                          <tr>
-                            <td>
-                              <b>passportId</b>
-                            </td>
-                            <td style="color: var(--blue-600)">path</td>
-                            <td style="font-style: italic;">true</td>
-                            <td>passportId</td>
-                          </tr>
-                          
-                        </tbody>
-                      </table>
-                    </div>
-                  </section>
+                  
 
                   <section data-content="headers" class="headers-content">
                     <div class="code-block">
@@ -5229,7 +5175,7 @@
                             <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                           </div>
                           <code>
-                            <pre>Form Data (field: passportImages[])</pre>
+                            <pre>Form Data</pre>
                           </code>
                         </div>
                       </section>
@@ -5242,7 +5188,17 @@
                           <hr style="margin: 0.5rem 0; border: 0.8px solid var(--white); opacity: 0.2" />
                         </div>
                         <code>
-                          <pre>{ "success": true, "images": [ { "url": "...", "name": "...", "publicId": "...", ... } ] }</pre>
+                          <pre>{
+  "success": true,
+  "image": {
+    "url": "https://res.cloudinary.com/...IMG_PASS_68122116ecccbf17300a8829.png",
+    "name": "IMG_PASS_68122116ecccbf17300a8829",
+    "publicId": "IMG_PASS_68122116ecccbf17300a8829",
+    "assetId": "63545234234344",
+    "format": "jpg",
+    "bytes": 67541
+  }
+}</pre>
                         </code>
                       </div>
                     </section>

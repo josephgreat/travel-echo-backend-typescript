@@ -1,4 +1,9 @@
-import { getModelForClass, index, modelOptions, prop } from "@typegoose/typegoose";
+import {
+  getModelForClass,
+  index,
+  modelOptions,
+  prop
+} from "@typegoose/typegoose";
 import { z } from "zod";
 
 export enum BadgeOperator {
@@ -24,7 +29,7 @@ export class Badge {
   @prop({ required: true })
   public description!: string;
 
-  @prop({ required: true, unique: true })
+  @prop({ required: true })
   public level!: number;
 
   @prop({ required: true, enum: BadgeCategory })
@@ -49,16 +54,19 @@ export const BadgeZodSchema = z.object({
   description: z
     .string({ message: "Badge description is required" })
     .nonempty({ message: "Badge description is required" }),
-  level: z
+  level: z.coerce
     .number({ message: "Badge level must be a number" })
     .min(1, { message: "Badge level must be greater than 0" }),
-  category: z.enum([BadgeCategory.Memory, BadgeCategory.Trip], {
-    message: `Badge category must be ${BadgeCategory.Memory} or ${BadgeCategory.Trip}`
-  }),
+  category: z.enum(
+    [BadgeCategory.Memory, BadgeCategory.Trip, BadgeCategory.Budget],
+    {
+      message: `Badge category must be ${BadgeCategory.Memory}. ${BadgeCategory.Budget}, or ${BadgeCategory.Trip}`
+    }
+  ),
   operator: z.enum(["EQ", "GT", "GTE", "LT", "LTE"], {
     message: `Badge operator must be EQ, GT, GTE, LT, or LTE`
   }),
-  value: z
+  value: z.coerce
     .number({ message: "Value must be a number" })
     .nonnegative({ message: "Value cannot be negative" }),
   iconUrl: z.string({ message: "Invalid icon URL" }).optional()

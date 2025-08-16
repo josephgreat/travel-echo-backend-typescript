@@ -7,10 +7,12 @@ export default defineApi(
   defineHandler(async (req) => {
     const { id } = req.user!;
 
-    const results = getNextLevelBadgesWithProgress(id);
+    const results = await getNextLevelBadgesWithProgress(id);
+
+    console.log(results);
 
     return {
-      badges: results
+      data: results
     };
   })
 );
@@ -23,22 +25,15 @@ export default defineApi(
  * @res {json}
  * {
  *   "success": true,
- *   "badges": [
- *      {
- *       "_id": "64e5a320c41e2f5e8e1c29a8",
- *       "category": "MEMORY | TRIP | BUDGET",
- *       "nextBadge": {
- *          "_id": "64e5a320c41e2f5e8e1c29a8",
- *          "name": "string",
- *          "level": "number",
- *          "description": "string",
- *          "category": "TRIP | MEMORY...",
- *          "operator": "EQ | GT | LT | GTE | LTE",
- *          "value": "number"
- *        },
- *        "percentageProgress": 40
- *      }
- *    ]
+ *   "data": {
+ *     "MEMORY": {
+ *       "highestEarnedBadge": "Badge | null",
+ *       "nextLevelBadge": "Badge",
+ *       "currentValue": "number",
+ *       "requiredValue": "number",
+ *       "percentageProgress": "number"
+ *     }
+ *   }
  * }
  * @use {Query}
  */

@@ -34,8 +34,8 @@ export default defineApi(
     }
 
     try {
-     await Promise.all(
-        images.map((img) =>
+      await Promise.all(
+        images.map((img: { publicId: string; }) =>
           cloudinary.v2.uploader.destroy(img.publicId, { invalidate: true })
         )
       );
@@ -43,8 +43,9 @@ export default defineApi(
         cloudinary.v2.api.delete_folder(
           `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`
         ),
-        passportRepository.updateOne({ _id: passport._id, user: userId }, { images: undefined })
-        passportRepository.updateOne({ _id: passport._id, user: userId }, { images: [] })
+
+        passportRepository.updateOne({ _id: passport._id, user: userId }, { images: [] }),
+
       ]);
 
       return {

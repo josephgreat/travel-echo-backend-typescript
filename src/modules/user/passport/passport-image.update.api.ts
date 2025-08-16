@@ -56,12 +56,15 @@ export default defineApi(
 
             resolve({
               url: result.secure_url,
-              name: result.display_name,
+              name: result.display_name ?? imagePublicId,
               publicId: result.public_id,
-              assetId: result.asset_id,
-              format: result.format,
-              bytes: result.bytes
-            });
+              assetId: result.asset_id!,
+              format: result.format!,
+              bytes: result.bytes!
+            };
+    
+            uploadedImages.push(cloudinaryImage);
+            resolve(cloudinaryImage);
           }
         );
         file.pipe(stream);

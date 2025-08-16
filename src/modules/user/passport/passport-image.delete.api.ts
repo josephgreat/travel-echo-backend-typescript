@@ -43,6 +43,7 @@ export default defineApi(
         cloudinary.v2.api.delete_folder(
           `${CLOUDINARY_PASSPORT_IMAGES_FOLDER}/${passport._id.toString()}`
         ),
+        passportRepository.updateOne({ _id: passport._id, user: userId }, { images: undefined })
         passportRepository.updateOne({ _id: passport._id, user: userId }, { images: [] })
       ]);
 

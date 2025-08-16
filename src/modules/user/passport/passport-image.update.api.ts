@@ -64,7 +64,7 @@ export default defineApi(
               format: result.format,
               bytes: result.bytes
             });
-            uploadedImages.push(reult);
+            uploadedImages.push(result);
           }
         );
         file.pipe(stream);

@@ -110,11 +110,6 @@ export const routes = [
   },
   {
     "group": "/users/me",
-    "path": "/users/me/milestones",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
     "path": "/users/me/expenses/:expense_id/receipt",
     "method": "delete"
   },
@@ -195,23 +190,8 @@ export const routes = [
   },
   {
     "group": "/users/me",
-    "path": "/users/me/profile/image",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile/image",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile",
+    "path": "/users/me/milestones",
     "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/profile",
-    "method": "put"
   },
   {
     "group": "/users/me",
@@ -241,6 +221,26 @@ export const routes = [
   {
     "group": "/users/me",
     "path": "/users/me/passport",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile/image",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile/image",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/profile",
     "method": "put"
   },
   {

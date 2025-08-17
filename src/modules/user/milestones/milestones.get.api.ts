@@ -15,7 +15,7 @@ export default defineApi(
 
     const milestones = await milestoneRepository.findOrCreate(
       { user: id },
-      { user: id, totalMemories: 0, totalTrips: 0 },
+      { user: id, totalMemories: 0, totalTrips: 0, totalBudgets: 0 },
       { populate, select }
     );
 

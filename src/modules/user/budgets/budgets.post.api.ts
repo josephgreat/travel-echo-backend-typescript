@@ -17,7 +17,10 @@ export default defineApi(
     const data = req.validatedBody as BudgetZodType;
     const { id } = req.user!;
 
-    const milestone = await milestoneRepository.findOrCreate({ user: id }, { user: id });
+    const milestone = await milestoneRepository.findOrCreate(
+      { user: id },
+      { user: id, totalBudgets: 0, totalMemories: 0, totalTrips: 0 }
+    );
 
     const [budget] = await Promise.all([
       budgetRepository.create({
@@ -25,10 +28,15 @@ export default defineApi(
         ...data
       }),
 
-      milestoneRepository.updateOne(milestone._id, { totalBudgets: milestone.totalBudgets + 1 })
+      milestoneRepository.updateOne(milestone._id, {
+        totalBudgets: (milestone.totalBudgets ?? 0) + 1
+      })
     ]);
 
-    const { hasEarnedNewBadge, badge } = await awardBadgeIfEligible(id, BadgeCategory.Budget);
+    const { hasEarnedNewBadge, badge } = await awardBadgeIfEligible(
+      id,
+      BadgeCategory.Budget
+    );
 
     return {
       budget,

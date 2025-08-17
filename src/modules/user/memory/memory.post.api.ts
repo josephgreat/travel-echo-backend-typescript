@@ -21,18 +21,26 @@ export default defineApi(
     const data = req.validatedBody as z.infer<typeof MemoryZodSchema>;
 
     try {
-      const milestone = await milestoneRepository.findOrCreate({ user: id }, { user: id });
-
+      const milestone = await milestoneRepository.findOrCreate(
+        { user: id },
+        { user: id, totalBudgets: 0, totalMemories: 0, totalTrips: 0 }
+      );
+      
       const [memory] = await Promise.all([
         memoryRepository.createUnique(
           { user: id, title: { value: data.title, forceUnique: true } },
           { user: id, ...data }
         ),
 
-        milestoneRepository.updateOne(milestone._id, { totalMemories: milestone.totalMemories + 1 })
+        milestoneRepository.updateOne(milestone._id, {
+          totalMemories: milestone.totalMemories + 1
+        })
       ]);
 
-      const { hasEarnedNewBadge, badge } = await awardBadgeIfEligible(id, BadgeCategory.Memory);
+      const { hasEarnedNewBadge, badge } = await awardBadgeIfEligible(
+        id,
+        BadgeCategory.Memory
+      );
 
       return {
         memory,
@@ -45,7 +53,9 @@ export default defineApi(
           error.name === "DUPLICATE_FIELD_ERROR" ||
           error.name === "MAX_UNIQUE_VALUE_GENERATION_ERROR"
         ) {
-          throw HttpException.badRequest("A memory with this title already exists.");
+          throw HttpException.badRequest(
+            "A memory with this title already exists."
+          );
         }
       }
       throw error;

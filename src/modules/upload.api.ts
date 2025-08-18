@@ -9,11 +9,14 @@ export default defineApi(
   },
   defineHandler(async (req) => {
     console.log("In upload");
+
     const { execute } = new Formstream({ headers: req.headers });
 
     const res = await execute(req, async ({ file }) => {
       return String(file);
     });
+
+    console.log(res.error?.message);
 
     console.log(res.data?.fields);
 

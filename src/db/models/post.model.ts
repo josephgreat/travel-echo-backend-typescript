@@ -50,6 +50,9 @@ export class Post {
   public isEdited!: boolean;
 }
 
+
+
+
 // Computed fields
 // isLikedByViewer boolean;
 // isBookmarkedByViewer boolean;

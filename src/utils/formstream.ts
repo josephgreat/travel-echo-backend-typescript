@@ -193,10 +193,10 @@ export class Formstream {
       });
 
       // Request events
-      req.on("close", () => {
+     /*  req.on("close", () => {
         safeReject(this.createError("Request aborted", "ABORT_ERROR"));
       });
-
+ */
       req.on("error", (err) => {
         safeReject(this.createError(err, "REQUEST_ERROR"));
       });

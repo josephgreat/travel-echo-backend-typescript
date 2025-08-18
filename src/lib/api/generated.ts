@@ -110,6 +110,11 @@ export const routes = [
   },
   {
     "group": "/users/me",
+    "path": "/users/me/milestones",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
     "path": "/users/me/expenses/:expense_id/receipt",
     "method": "delete"
   },
@@ -150,6 +155,36 @@ export const routes = [
   },
   {
     "group": "/users/me",
+    "path": "/users/me/passport/image",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport/:passportId/images",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport/:passportId",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
+    "method": "post"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/passport",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
     "path": "/users/me/memories",
     "method": "get"
   },
@@ -186,41 +221,6 @@ export const routes = [
   {
     "group": "/users/me",
     "path": "/users/me/memories/:memory_id",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/milestones",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport/image",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport/:passportId/images",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport/:passportId",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport",
-    "method": "post"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/passport",
     "method": "put"
   },
   {

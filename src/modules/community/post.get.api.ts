@@ -89,5 +89,4 @@ export default defineApi(
  *   "success": true,
  *   "post": { ... }
  * }
- * @use {Query}
  */

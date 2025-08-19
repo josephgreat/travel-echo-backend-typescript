@@ -1,3 +1,4 @@
+import { CommentModel } from "#src/db/models/comment.model";
 import { MilestoneModel } from "#src/db/models/milestone.model";
 import { PostMediaModel } from "#src/db/models/post-media.model";
 import { PostModel } from "#src/db/models/post.model";
@@ -50,6 +51,7 @@ export default defineApi(
     const dbPromises: Promise<unknown>[] = [
       post.deleteOne(),
       PostMediaModel.deleteMany({ post: postId }),
+      CommentModel.deleteMany({ post: postId }),
       MilestoneModel.updateOne({ user: userId }, { $inc: { totalPosts: -1 } })
     ];
 
@@ -89,3 +91,9 @@ export default defineApi(
     };
   })
 );
+
+// delete post
+// delete post media
+// if post is reposting update repost count on reposted post
+// update totalPosts milestone for user
+// delete all post comments

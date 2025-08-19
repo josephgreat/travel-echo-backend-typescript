@@ -1,4 +1,3 @@
-import { PostModel } from "#src/db/models/post.model";
 import { defineApi } from "#src/lib/api/api";
 import { defineHandler, defineValidator } from "#src/lib/api/handlers";
 import { HttpException } from "#src/lib/api/http";
@@ -11,53 +10,48 @@ import {
 
 export default defineApi(
   {
-    path: "/posts/:post_id/comments",
+    path: "/posts/:post_id/comments/:comment_id",
     group: "/community",
-    method: "post",
+    method: "put",
     middleware: defineValidator("body", commentSchema)
   },
   defineHandler(async (req) => {
     const { id: userId } = req.user!;
     const postId = castToObjectId(req.params.post_id);
+    const commentId = castToObjectId(req.params.comment_id);
     const body = req.validatedBody as CommentSchema;
 
-    const post = await PostModel.findById(postId, { _id: 1 });
+    const data = { content: body.content };
 
-    if (!post) {
-      throw HttpException.badRequest("Post not found");
+    const comment = await CommentModel.findOneAndUpdate(
+      { _id: commentId, user: userId, post: postId },
+      { $set: { content: data.content, isEdited: true } }
+    );
+
+    if (!comment) {
+      throw HttpException.notFound("Comment not found");
     }
 
-    const [comment] = await Promise.all([
-      CommentModel.create({
-        user: userId,
-        post: post._id,
-        parentComment: body.parentComment,
-        content: body.content,
-        isReplying: !!body.parentComment
-      }),
-      post.updateOne({ $inc: { commentCount: 1 } })
-    ]);
-
     return {
-      comment,
+      comment
     };
   })
 );
 
 /**
- * @api {post} /community/posts/:post_id/comments
+ * @api {put} /community/posts/:post_id/comments/:comment_id
  * @par {post_id} @path The post ID
- * @desc Creates a comment
+ * @par {comment_id} @path The comment ID
+ * @desc Updates the content of a comment
  * @domain {Community}
  * @use {Auth}
  * @body {json}
  * {
- *   "content": "string",
- *   "parentComment": "comment_id | optional | if the comment is replying to another"
+ *   "content": "string"
  * }
  * @res {json}
  * {
  *   "success": true,
- *   "comment": { ... }
+ *   "updated": true
  * }
  */

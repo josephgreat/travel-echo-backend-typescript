@@ -100,7 +100,7 @@ export default defineApi(
 
     const result = postSchema.safeParse(post);
 
-    if (!result.success) {
+    if (!result.success || (!result.data.content && uploadedFiles.length === 0)) {
       // delete images
       const publicIds = uploadedFiles
         .map((file) => file.data?.publicId)
@@ -108,7 +108,7 @@ export default defineApi(
 
       await cloudinary.v2.api.delete_resources(publicIds, { invalidate: true });
 
-      throw HttpException.badRequest(result.error.issues[0].message);
+      throw HttpException.badRequest(result.error?.issues[0]?.message || "Post is empty");
     }
 
     const validated = result.data;
@@ -117,6 +117,7 @@ export default defineApi(
       PostModel.create({
         ...validated,
         _id: postId,
+        user: userId,
         media: uploadedFiles.map((file) => file.data?._id),
         isReposting: !!validated.repostedPost
       }),
@@ -155,5 +156,4 @@ export default defineApi(
  *    "errored": "number"
  *   }
  * }
- * @use {Query}
  */

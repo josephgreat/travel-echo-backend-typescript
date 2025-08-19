@@ -64,12 +64,13 @@ export class Post {
 export const PostModel = getModelForClass(Post);
 
 export const postSchema = z.object({
-  user: z
+/*   user: z
     .string({ message: "User ID is required" })
     .refine((val) => mongoose.Types.ObjectId.isValid(val), {
       message: "User ID must be a valid MongoDB ObjectId"
     })
-    .transform((val) => castToObjectId(val)),
+    .transform((val) => castToObjectId(val))
+    .optional(), */
 
   repostedPost: z
     .string()

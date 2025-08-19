@@ -26,7 +26,7 @@ async function main() {
    * API Documentation
    */
   app.get("/doc", (req, res) => {
-    const filePath = path.resolve("public/html/api.html");
+    const filePath = path.resolve("public/api.html");
     res.sendFile(filePath);
   });
 

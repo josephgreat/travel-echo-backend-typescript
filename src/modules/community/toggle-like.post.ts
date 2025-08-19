@@ -4,7 +4,7 @@ import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 
 /**
- * @api {post} /community/posts/:post_id/toggle-like
+ * @api {put} /community/posts/:post_id/toggle-like
  * @par {post_id} @path The post ID
  * @desc Likes or unlikes the post with the provided ID
  * @domain {Community}
@@ -21,7 +21,7 @@ export default defineApi(
   {
     path: "/posts/:post_id/toggle-like",
     group: "/community",
-    method: "post"
+    method: "put"
   },
   defineHandler(async (req) => {
     const userId = req.user!.id.toString();

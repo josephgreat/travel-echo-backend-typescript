@@ -64,7 +64,7 @@ export class Post {
 export const PostModel = getModelForClass(Post);
 
 export const postSchema = z.object({
-/*   user: z
+  /*   user: z
     .string({ message: "User ID is required" })
     .refine((val) => mongoose.Types.ObjectId.isValid(val), {
       message: "User ID must be a valid MongoDB ObjectId"
@@ -98,29 +98,6 @@ export const postSchema = z.object({
   isPublic: z.coerce
     .boolean({ message: "isPublic must be true or false" })
     .default(true)
-    .optional(),
-
-  likeCount: z.coerce
-    .number({ message: "Like count must be a number" })
-    .min(0, { message: "Like count cannot be negative" })
-    .default(0)
-    .optional(),
-
-  commentCount: z.coerce
-    .number({ message: "Comment count must be a number" })
-    .min(0, { message: "Comment count cannot be negative" })
-    .default(0)
-    .optional(),
-
-  repostCount: z.coerce
-    .number({ message: "Repost count must be a number" })
-    .min(0, { message: "Repost count cannot be negative" })
-    .default(0)
-    .optional(),
-
-  isEdited: z
-    .boolean({ message: "isEdited must be true or false" })
-    .default(false)
     .optional()
 });
 

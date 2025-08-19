@@ -1,4 +1,5 @@
 import { CommentModel } from "#src/db/models/comment.model";
+import { LikeModel } from "#src/db/models/like.model";
 import { MilestoneModel } from "#src/db/models/milestone.model";
 import { PostMediaModel } from "#src/db/models/post-media.model";
 import { PostModel } from "#src/db/models/post.model";
@@ -52,6 +53,7 @@ export default defineApi(
       post.deleteOne(),
       PostMediaModel.deleteMany({ post: postId }),
       CommentModel.deleteMany({ post: postId }),
+      LikeModel.deleteMany({ post: postId }),
       MilestoneModel.updateOne({ user: userId }, { $inc: { totalPosts: -1 } })
     ];
 
@@ -97,3 +99,5 @@ export default defineApi(
 // if post is reposting update repost count on reposted post
 // update totalPosts milestone for user
 // delete all post comments
+// delete all post likes
+// delete all comment likes

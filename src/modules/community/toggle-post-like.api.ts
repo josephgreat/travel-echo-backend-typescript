@@ -1,4 +1,4 @@
-import { LikeModel } from "#src/db/models/like.model";
+import { LikeModel, LikeTarget } from "#src/db/models/like.model";
 import { PostModel } from "#src/db/models/post.model";
 import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
@@ -16,7 +16,6 @@ import { defineHandler } from "#src/lib/api/handlers";
  * }
  */
 
-
 export default defineApi(
   {
     path: "/posts/:post_id/toggle-like",
@@ -27,7 +26,11 @@ export default defineApi(
     const userId = req.user!.id.toString();
     const postId = req.params.post_id;
 
-    const like = await LikeModel.findOne({ post: postId, user: userId });
+    const like = await LikeModel.findOne({
+      post: postId,
+      user: userId,
+      target: LikeTarget.Post
+    });
     let isLiked: boolean = false;
 
     if (like) {
@@ -43,7 +46,11 @@ export default defineApi(
     } else {
       // Like the post
       await Promise.all([
-        LikeModel.create({ user: userId, post: postId }),
+        LikeModel.create({
+          user: userId,
+          post: postId,
+          target: LikeTarget.Post
+        }),
         PostModel.updateOne({ _id: postId }, { $inc: { likeCount: 1 } })
       ]);
 

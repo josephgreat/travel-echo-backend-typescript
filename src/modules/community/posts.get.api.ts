@@ -1,4 +1,4 @@
-import { LikeModel } from "#src/db/models/like.model";
+import { LikeModel, LikeTarget } from "#src/db/models/like.model";
 import { PostModel } from "#src/db/models/post.model";
 import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
@@ -76,7 +76,8 @@ export default defineApi(
     const userLikes = await LikeModel.find(
       {
         user: userId,
-        post: { $in: postIds }
+        post: { $in: postIds },
+        target: LikeTarget.Post
       },
       { post: 1 } // Only need the post field
     )

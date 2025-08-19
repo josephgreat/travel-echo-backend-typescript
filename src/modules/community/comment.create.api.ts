@@ -35,11 +35,17 @@ export default defineApi(
         content: body.content,
         isReplying: !!body.parentComment
       }),
-      post.updateOne({ $inc: { commentCount: 1 } })
+      post.updateOne({ $inc: { commentCount: 1 } }),
+      body.parentComment
+        ? CommentModel.updateOne(
+            { _id: body.parentComment },
+            { $inc: { replyCount: 1 } }
+          )
+        : Promise.resolve()
     ]);
 
     return {
-      comment,
+      comment
     };
   })
 );

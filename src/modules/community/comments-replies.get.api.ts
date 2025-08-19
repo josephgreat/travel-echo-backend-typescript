@@ -4,8 +4,8 @@ import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 
 /**
- * @api {get} /community/posts/:post_id/comments
- * @desc Gets a list of comments for a post
+ * @api {get} /community/posts/:post_id/comments/:comment_id/replies
+ * @desc Gets a list of replies for a comment
  * @domain {Community}
  * @use {Auth}
  * @res {json}
@@ -22,21 +22,21 @@ import { defineHandler } from "#src/lib/api/handlers";
  * @use {Query}
  */
 
-
 export default defineApi(
   {
     group: "/community",
-    path: "/posts/:post_id/comments",
+    path: "/posts/:post_id/comments/:comment_id/replies",
     method: "get"
   },
   defineHandler(async (req) => {
     const userId = req.user!.id;
     const postId = req.params.post_id;
+    const commentId = req.params.comment_id;
 
     const { skip = 0, limit = 5, sort = {} } = req.parsedQuery || {};
 
     const comments = await CommentModel.find(
-      { post: postId, isReplying: false },
+      { post: postId, parentComment: commentId, isReplying: true },
       {},
       { skip, limit, sort: { createdAt: -1, ...sort } }
     )

@@ -15,5 +15,5 @@
  * @par {select?} @query e.g. select=name,email
  * @par {populate?} @query e.g. populate=profile
  * @par {limit?} @query e.g. limit=10
- * @par {page?} @query e.g. page=1
+ * @par {skip?} @query e.g. skip=50
  */

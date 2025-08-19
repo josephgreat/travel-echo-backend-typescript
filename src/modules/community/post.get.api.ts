@@ -1,4 +1,4 @@
-import { LikeModel } from "#src/db/models/like.model";
+import { LikeModel, LikeTarget } from "#src/db/models/like.model";
 import { PostModel } from "#src/db/models/post.model";
 import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
@@ -54,7 +54,7 @@ export default defineApi(
       throw HttpException.notFound("Post not found.");
     }
 
-    const like = await LikeModel.findOne({ user: userId, post: post?._id });
+    const like = await LikeModel.findOne({ user: userId, post: post?._id, target: LikeTarget.Post });
 
     const formattedPost = {
       ...post,

@@ -4,6 +4,11 @@ import { User } from "./user.model";
 import { Post } from "./post.model";
 import { Comment } from "./comment.model";
 
+export enum LikeTarget {
+  Post = "POST",
+  Comment = "COMMENT"
+}
+
 @modelOptions({
   schemaOptions: { timestamps: true }
 })
@@ -16,6 +21,9 @@ export class Like {
 
   @prop({ required: false, ref: () => Comment })
   public comment?: mongoose.Types.ObjectId;
+
+  @prop({ required: true, enum: LikeTarget })
+  public target?: LikeTarget;
 }
 
 export const LikeModel = getModelForClass(Like);

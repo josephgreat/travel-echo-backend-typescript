@@ -18,7 +18,7 @@ export default defineApi(
 
     const comment = await CommentModel.findOne(
       { _id: commentId, user: userId, post: postId },
-      { post: 1 }
+      { post: 1, parentComment: 1 }
     );
 
     if (!comment) {
@@ -27,7 +27,17 @@ export default defineApi(
 
     await Promise.all([
       comment.deleteOne(),
-      PostModel.updateOne({ _id: comment.post }, { $inc: { commentCount: -1 } })
+      CommentModel.deleteMany({ parentComment: commentId }),
+      PostModel.updateOne(
+        { _id: comment.post },
+        { $inc: { commentCount: -1 } }
+      ),
+      comment.parentComment
+        ? CommentModel.updateOne(
+            { _id: comment.parentComment },
+            { $inc: { replyCount: -1 } }
+          )
+        : Promise.resolve()
     ]);
 
     return {

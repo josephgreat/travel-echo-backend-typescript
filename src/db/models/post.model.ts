@@ -13,7 +13,11 @@ export class Post {
   @prop({ required: true, ref: () => User })
   public user!: mongoose.Types.ObjectId;
 
-  @prop({ ref: () => PostMedia, type: () => [mongoose.Types.ObjectId], default: [] })
+  @prop({
+    ref: () => PostMedia,
+    type: () => [mongoose.Types.ObjectId],
+    default: []
+  })
   public media!: mongoose.Types.ObjectId[];
 
   @prop({ ref: () => Post })
@@ -48,10 +52,10 @@ export class Post {
 
   @prop({ default: false, required: true })
   public isEdited!: boolean;
+
+  @prop({ default: false })
+  public isReposting!: boolean;
 }
-
-
-
 
 // Computed fields
 // isLikedByViewer boolean;
@@ -83,7 +87,11 @@ export const postSchema = z.object({
     .optional(),
 
   tags: z
-    .array(z.string({ message: "Tag must be a string" }).min(1, { message: "Tag cannot be empty" }))
+    .array(
+      z
+        .string({ message: "Tag must be a string" })
+        .min(1, { message: "Tag cannot be empty" })
+    )
     .default([]),
 
   isPublic: z.coerce
@@ -109,7 +117,10 @@ export const postSchema = z.object({
     .default(0)
     .optional(),
 
-  isEdited: z.boolean({ message: "isEdited must be true or false" }).default(false).optional()
+  isEdited: z
+    .boolean({ message: "isEdited must be true or false" })
+    .default(false)
+    .optional()
 });
 
 export type PostSchema = z.infer<typeof postSchema>;

@@ -84,7 +84,9 @@ export default defineApi(
       .exec();
 
     // Create a Set for O(1) lookup performance
-    const likedPostIds = new Set(userLikes.map((like) => like.post?.toString()));
+    const likedPostIds = new Set(
+      userLikes.map((like) => like.post?.toString())
+    );
 
     // Format posts with like status
     const formattedPosts = posts.map((post) => ({
@@ -94,10 +96,13 @@ export default defineApi(
         // @ts-expect-error population
         name: post.user.name,
         // @ts-expect-error population
-        image: post.user.profile.image
+        image: post.user.profile.image?.url ?? null,
+        // @ts-expect-error population
+        profileId: post.user.profile._id
       },
+      user: undefined,
       isLikedByViewer: likedPostIds.has(post._id.toString()),
-      isRepositing: !!post.repostedPost
+      isViewedByAuthor: userId.toString() === post.user._id.toString(),
     }));
 
     return {
@@ -111,7 +116,6 @@ export default defineApi(
     };
   })
 );
-
 
 /**
  * @api {get} /community/posts

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post</title>
+  </head>
+  <body>
+    <form>
+      <div>
+        <label for="user">User ID</label>
+        <input
+          id="user"
+          name="user"
+          value="68a03dc24e3ba403934f3577"
+          type="text"
+        />
+      </div>
+
+      <div>
+        <label for="content">Content</label>
+        <textarea id="content" name="content"></textarea>
+      </div>
+
+      <div>
+        <label for="tags">Tags</label>
+        <textarea id="tags" name="tags"></textarea>
+      </div>
+
+      <div>
+        <label for="is-public">Is Public</label>
+        <input type="checkbox" name="isPublic" id="is-public" />
+      </div>
+
+      <div>
+        <label for="media">Media</label>
+        <input type="file" multiple name="files" id="media" />
+      </div>
+
+      <input type="submit" value="Submit" />
+    </form>
+
+    <script>
+      const form = document.querySelector("form");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const isPublic = formData.get("isPublic") === "on" ? "true" : "false";
+        formData.set("isPublic", isPublic);
+
+        try {
+          const res = await fetch("/api/v1/community/posts", {
+            headers: {
+              Authorization:
+                "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGEwM2RjMjRlM2JhNDAzOTM0ZjM1NzciLCJlbWFpbCI6Im5hdGhhbjQ0d2lsc29uQGdtYWlsLmNvbSIsImlhdCI6MTc1NTMzMjE4NiwiZXhwIjoxNzU3OTI0MTg2fQ.XsKonSFnBy2x9Nluim-rThDm_YmzPsojfUBG3JyM9lg"
+            },
+            method: "post",
+            body: formData
+          });
+          const data = await res.json();
+          console.log(data);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -17,6 +17,9 @@ export class Milestone {
 
   @prop({ default: 0 })
   public totalBudgets!: number;
+
+  @prop({ default: 0 })
+  public totalPosts!: number;
 }
 
 export const MilestoneModel = getModelForClass(Milestone);

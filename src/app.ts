@@ -41,6 +41,7 @@ async function main() {
   app.use(parseRequestQuery);
   await generateRoutes(app, routeConfig);
   app.use(errorHandler);
+
 }
 
 main();

@@ -2,6 +2,7 @@ import { LikeModel } from "#src/db/models/like.model";
 import { PostModel } from "#src/db/models/post.model";
 import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
+import { HttpException } from "#src/lib/api/http";
 
 export default defineApi(
   {
@@ -44,16 +45,31 @@ export default defineApi(
       })
       .populate({
         path: "media",
-        options: { limit: 4 }
+        //options: { limit: 4 }
       })
       .lean()
       .exec();
+
+    if (!post) {
+      throw HttpException.notFound("Post not found.");
+    }
 
     const like = await LikeModel.findOne({ user: userId, post: post?._id });
 
     const formattedPost = {
       ...post,
-      isLikedByViewer: !!like
+      author: {
+        _id: post.user._id,
+        // @ts-expect-error population
+        name: post.user.name,
+        // @ts-expect-error population
+        image: post.user.profile.image?.url ?? null,
+        // @ts-expect-error population
+        profileId: post.user.profile._id
+      },
+      isLikedByViewer: !!like,
+      isViewedByAuthor: userId.toString() === post.user._id.toString(),
+      user: undefined
     };
 
     return {

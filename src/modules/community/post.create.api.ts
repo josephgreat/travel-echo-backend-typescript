@@ -13,6 +13,7 @@ import { Formstream } from "#src/utils/formstream";
 import { randomString } from "#src/utils/helpers";
 import mongoose from "mongoose";
 import cloudinary from "cloudinary";
+import { MilestoneModel } from "#src/db/models/milestone.model";
 
 export default defineApi(
   {
@@ -32,36 +33,39 @@ export default defineApi(
     const { data, error } = await formstream.execute(req, async ({ file }) => {
       const mediaPublicId = `${POST_MEDIA_PUBLIC_ID_PREFIX}${postId.toString()}_${randomString(16, "numeric")}`;
 
-      return new Promise<PostMedia>((resolve, reject) => {
-        const stream = cloudinary.v2.uploader.upload_stream(
-          {
-            asset_folder: `${CLOUDINARY_POST_MEDIA_FOLDER}/${postId.toString()}`,
-            public_id: mediaPublicId,
-            display_name: mediaPublicId,
-            unique_filename: true
-          },
-          (error, result) => {
-            if (error) return reject(error);
+      return new Promise<PostMedia & { _id: mongoose.Types.ObjectId }>(
+        (resolve, reject) => {
+          const stream = cloudinary.v2.uploader.upload_stream(
+            {
+              asset_folder: `${CLOUDINARY_POST_MEDIA_FOLDER}/${postId.toString()}`,
+              public_id: mediaPublicId,
+              display_name: mediaPublicId,
+              unique_filename: true
+            },
+            (error, result) => {
+              if (error) return reject(error);
 
-            if (result) {
-              resolve({
-                url: result.secure_url,
-                name: result.display_name,
-                publicId: result.public_id,
-                assetId: result.asset_id,
-                format: result.format,
-                bytes: result.bytes,
-                user: userId,
-                post: postId
-              });
-            } else {
-              reject(new Error("No result from Cloudinary"));
+              if (result) {
+                resolve({
+                  _id: new mongoose.Types.ObjectId(),
+                  url: result.secure_url,
+                  name: result.display_name,
+                  publicId: result.public_id,
+                  assetId: result.asset_id,
+                  format: result.format,
+                  bytes: result.bytes,
+                  user: userId,
+                  post: postId
+                });
+              } else {
+                reject(new Error("No result from Cloudinary"));
+              }
             }
-          }
-        );
+          );
 
-        file.pipe(stream);
-      });
+          file.pipe(stream);
+        }
+      );
     });
 
     if (error) {
@@ -82,8 +86,13 @@ export default defineApi(
       { uploadedFiles: [] as typeof files, erroredFiles: [] as typeof files }
     );
 
-    const post: Record<string, string> = fields.reduce((acc, field) => {
-      const object: Record<string, string> = {};
+    const post: Record<string, unknown> = fields.reduce((acc, field) => {
+      const object: Record<string, unknown> = {};
+      if (field.name === "tags") {
+        object[field.name] = field.value.split(",").map((val) => val.trim());
+        acc = { ...acc, ...object };
+        return acc;
+      }
       object[field.name] = field.value;
       acc = { ...acc, ...object };
       return acc;
@@ -105,8 +114,20 @@ export default defineApi(
     const validated = result.data;
 
     const [createdPost] = await Promise.all([
-      PostModel.create({ ...validated, _id: postId }),
-      PostMediaModel.create(uploadedFiles.map((file) => ({ user: userId, post: postId, ...file })))
+      PostModel.create({
+        ...validated,
+        _id: postId,
+        media: uploadedFiles.map((file) => file.data?._id),
+        isReposting: !!validated.repostedPost
+      }),
+      PostMediaModel.create(
+        uploadedFiles.map((file) => ({
+          user: userId,
+          post: postId,
+          ...file.data
+        }))
+      ),
+      MilestoneModel.updateOne({ user: userId }, { $inc: { totalPosts: 1 } })
     ]);
 
     return {

@@ -116,7 +116,14 @@ export default defineApi(
     );
 
     await Promise.all([
-      post.updateOne({ isEdited: true }),
+      post.updateOne({
+        $set: { isEdited: true },
+        $addToSet: {
+          media: {
+            $each: uploadedFiles.map((file) => file.data?._id).filter(Boolean)
+          }
+        }
+      }),
       PostMediaModel.create(
         uploadedFiles.map((file) => ({
           user: userId,

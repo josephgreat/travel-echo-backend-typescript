@@ -70,7 +70,10 @@ export default defineApi(
     );
 
     await Promise.all([
-      post.updateOne({ isEdited: true }),
+      post.updateOne({
+        $set: { isEdited: true },
+        $pull: { media: { $in: mediaIds } }
+      }),
       PostMediaModel.deleteMany({ _id: { $in: mediaIds }, post: post._id }),
       cloudinary.v2.api.delete_resources(mediaPublicIds, {
         invalidate: true

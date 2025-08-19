@@ -165,46 +165,6 @@ export const routes = [
   },
   {
     "group": "/users/me",
-    "path": "/users/me/memories",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images/delete",
-    "method": "patch"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images",
-    "method": "post"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images/:image_id",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id/images",
-    "method": "get"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id",
-    "method": "delete"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories",
-    "method": "post"
-  },
-  {
-    "group": "/users/me",
-    "path": "/users/me/memories/:memory_id",
-    "method": "put"
-  },
-  {
-    "group": "/users/me",
     "path": "/users/me/expenses/:expense_id/receipt",
     "method": "delete"
   },
@@ -241,6 +201,46 @@ export const routes = [
   {
     "group": "/users/me",
     "path": "/users/me/expenses/:expense_id",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories/:memory_id/images/delete",
+    "method": "patch"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories/:memory_id/images",
+    "method": "post"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories/:memory_id/images/:image_id",
+    "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories/:memory_id/images",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories/:memory_id",
+    "method": "delete"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories",
+    "method": "post"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/memories/:memory_id",
     "method": "put"
   },
   {

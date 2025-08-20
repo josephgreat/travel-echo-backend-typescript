@@ -1,5 +1,5 @@
 import { CommentModel } from "#src/db/models/comment.model";
-import { LikeModel } from "#src/db/models/like.model";
+import { LikeModel, LikeTarget } from "#src/db/models/like.model";
 import { defineApi } from "#src/lib/api/api";
 import { defineHandler } from "#src/lib/api/handlers";
 
@@ -50,13 +50,26 @@ export default defineApi(
       })
       .lean();
 
+    if (comments.length === 0) {
+      return {
+        comments: [],
+        pagination: {
+          skip: skip,
+          limit: limit,
+          returned: 0,
+          hasMore: false
+        }
+      };
+    }
+
     // Batch fetch likes for all posts to avoid N+1 query problem
     const commentIds = comments.map((comment) => comment._id);
     const userLikes = await LikeModel.find(
       {
         user: userId,
         post: postId,
-        comment: { $in: commentIds }
+        comment: { $in: commentIds },
+        target: LikeTarget.Comment
       },
       { comment: 1 } // Only need the post field
     )
@@ -73,11 +86,11 @@ export default defineApi(
       author: {
         _id: comment.user._id,
         // @ts-expect-error population
-        name: post.user.name,
+        name: comment.user.name,
         // @ts-expect-error population
-        image: post.user.profile.image?.url ?? null,
+        image: comment.user.profile.image?.url ?? null,
         // @ts-expect-error population
-        profileId: post.user.profile._id
+        profileId: comment.user.profile._id
       },
       user: undefined,
       isLikedByViewer: likedCommentIds.has(comment._id.toString()),
@@ -85,7 +98,7 @@ export default defineApi(
     }));
 
     return {
-      posts: formattedComments,
+      comments: formattedComments,
       pagination: {
         skip: skip,
         limit: limit,

@@ -20,7 +20,7 @@ npm-debug.log*
 Thumbs.db
 
 # Build outputs
-/dist
+# /dist
 /tmp
 .cache
 

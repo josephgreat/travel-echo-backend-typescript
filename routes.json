@@ -1,6 +1,76 @@
 {
-  "count": 42,
+  "count": 62,
   "routes": [
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/comments",
+    "method": "post"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/comments/:comment_id",
+    "method": "delete"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/comments/:comment_id",
+    "method": "put"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/comments/:comment_id/replies",
+    "method": "get"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/comments",
+    "method": "get"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/media/add",
+    "method": "put"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/media/remove",
+    "method": "put"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts",
+    "method": "post"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id",
+    "method": "delete"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id",
+    "method": "get"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id",
+    "method": "put"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts",
+    "method": "get"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/comments/:comment_id/toggle-like",
+    "method": "put"
+  },
+  {
+    "group": "/community",
+    "path": "/community/posts/:post_id/toggle-like",
+    "method": "put"
+  },
   {
     "group": "/auth",
     "path": "/auth/recovery/send-otp",
@@ -48,8 +118,13 @@
   },
   {
     "group": "/users/me",
-    "path": "/users/me/driver-profile/{:user_id}",
-    "method": "post"
+    "path": "/users/me/earned-badges",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/next-level-badges",
+    "method": "get"
   },
   {
     "group": "/users/me",
@@ -80,6 +155,11 @@
     "group": "/users/me",
     "path": "/users/me/budgets/:budget_id",
     "method": "put"
+  },
+  {
+    "group": "/users/me",
+    "path": "/users/me/driver-profile/{:user_id}",
+    "method": "post"
   },
   {
     "group": "/users/me",
@@ -163,17 +243,22 @@
   },
   {
     "group": "/users/me",
+    "path": "/users/me/milestones",
+    "method": "get"
+  },
+  {
+    "group": "/users/me",
     "path": "/users/me/passport/image",
     "method": "delete"
   },
   {
     "group": "/users/me",
-    "path": "/users/me/passport/image",
-    "method": "patch"
+    "path": "/users/me/passport/:passportId/images",
+    "method": "put"
   },
   {
     "group": "/users/me",
-    "path": "/users/me/passport",
+    "path": "/users/me/passport/:passportId",
     "method": "delete"
   },
   {
@@ -210,6 +295,21 @@
     "group": "/users/me",
     "path": "/users/me/profile",
     "method": "put"
+  },
+  {
+    "group": null,
+    "path": "/badges",
+    "method": "get"
+  },
+  {
+    "group": null,
+    "path": "/badges",
+    "method": "post"
+  },
+  {
+    "group": null,
+    "path": "/upload",
+    "method": "post"
   }
 ]
 }
